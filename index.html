@@ -4579,25 +4579,13 @@ function showPrefDetail(p) {
   // まだ読み込み中またはまだロード未開始
   loading.classList.add("show");
 
-  // フォールバックURL
-  const rawUrl = p.photo
-    .replace("https://github.com/", "https://raw.githubusercontent.com/")
-    .replace("/blob/", "/")
-    .replace("?raw=true", "");
-
   img.onload = () => {
     img.classList.add("loaded");
     loading.classList.remove("show");
   };
   img.onerror = () => {
-    if (img.src !== rawUrl) {
-      // フォールバックURLに切替
-      img.onerror = null;
-      img.src = rawUrl;
-    } else {
-      // フォールバックも失敗
-      loading.classList.remove("show");
-    }
+    // 読み込み失敗時はローディング表示を消す
+    loading.classList.remove("show");
   };
   img.src = p.photo;
 }
@@ -4608,17 +4596,6 @@ function preloadAllPhotos() {
   PREFECTURES.forEach(p => {
     const im = new Image();
     im.src = p.photo;
-    im.onerror = () => {
-      // フォールバック先で再試行
-      const rawUrl = p.photo
-        .replace("https://github.com/", "https://raw.githubusercontent.com/")
-        .replace("/blob/", "/")
-        .replace("?raw=true", "");
-      if (im.src !== rawUrl) {
-        im.onerror = null;
-        im.src = rawUrl;
-      }
-    };
     imageCache[p.code] = im;
   });
 }

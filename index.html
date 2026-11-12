@@ -396,6 +396,7 @@ header.title .sub {
   color: var(--accent);
 }
 #learn-panel .pref-kana {
+  margin: 4px 0 -10px;
   text-align: center;
   font-size: 14px;
   color: #777;
@@ -410,6 +411,14 @@ header.title .sub {
   margin: 4px 0;
   font-size: 13px;
   font-weight: bold;
+}
+#learn-panel .photo-caption {
+  text-align: center;
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--ink);
+  margin-top: 6px;
+  min-height: 1.4em;
 }
 #learn-panel .photo-wrap {
   width: 100%;
@@ -2753,6 +2762,132 @@ header.title .sub {
 .sugoroku-goal-card .btn-replay { background: var(--bg-paper); color: var(--ink); }
 .sugoroku-goal-card .btn-back { background: var(--accent); color: #fff; }
 
+/* === フラッシュカード === */
+.app.flash-mode .label-layer { display: none; }
+.app.flash-mode #japan-map .prefecture,
+.app.flash-mode #japan-map .prefecture polygon,
+.app.flash-mode #japan-map .prefecture path { pointer-events: none; cursor: default; }
+#japan-map .prefecture.flash-target polygon,
+#japan-map .prefecture.flash-target path {
+  fill: var(--accent) !important;
+  stroke: #7a2114 !important;
+  stroke-width: 2.5px;
+  animation: flash-blink 1.2s ease-in-out infinite;
+}
+@keyframes flash-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+.flash-stage-name {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+.flash-round {
+  text-align: center;
+  font-size: 13px;
+  color: #777;
+  margin: 2px 0 6px;
+}
+.flash-card {
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  min-height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+.flash-q {
+  font-size: 56px;
+  font-weight: bold;
+  color: #ccc;
+}
+.flash-answer {
+  text-align: center;
+  animation: flash-fadein 0.35s ease-out;
+}
+.flash-kana {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--ink);
+  letter-spacing: 0.1em;
+}
+.flash-name {
+  font-size: 38px;
+  font-weight: bold;
+  color: var(--accent);
+  line-height: 1.2;
+}
+@keyframes flash-fadein {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.flash-check {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: fit-content;
+  margin: 0 auto 10px;
+  padding: 8px 20px;
+  background: var(--bg-paper);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 3px 3px 0 var(--ink);
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  animation: flash-fadein 0.35s ease-out;
+}
+.flash-check.concealed { visibility: hidden; }
+.flash-check input { display: none; }
+.flash-check .box {
+  width: 28px; height: 28px;
+  border: 3px solid var(--ink);
+  border-radius: 6px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #fff;
+  transition: background 0.15s;
+}
+.flash-check input:checked + .box { background: #2c9a4a; border-color: #2c6a2c; }
+.flash-check input:checked + .box::after { content: "✔"; }
+.flash-nav {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1fr;
+  gap: 6px;
+}
+.flash-nav .btn-mini { padding: 10px 4px; font-size: 14px; }
+.flash-nav .btn-mini:disabled { opacity: 0.4; cursor: default; }
+.flash-msg {
+  text-align: center;
+  font-weight: bold;
+  color: var(--accent-2);
+  min-height: 22px;
+  margin-top: 6px;
+  font-size: 14px;
+  transition: opacity 0.4s;
+}
+.flash-clear-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--accent);
+  margin: 8px 0 4px;
+}
+@media (max-width: 860px) {
+  .flash-name { font-size: 34px; }
+  .flash-card { min-height: 110px; }
+}
+
 .hidden { display: none !important; }
 </style>
 </head>
@@ -2770,8 +2905,9 @@ header.title .sub {
   </div>
 
   <div class="modes">
-    <button class="mode-btn active" data-group="oboeru" data-mode="learn">📖 学習モード</button>
-    <button class="mode-btn" data-group="oboeru" data-mode="blank">📍 指差し確認モード</button>
+    <button class="mode-btn active" data-group="oboeru" data-mode="learn">📖 都道府県の説明</button>
+    <button class="mode-btn" data-group="oboeru" data-mode="blank">📍 指差し確認</button>
+    <button class="mode-btn" data-group="oboeru" data-mode="flash">🃏 フラッシュカード</button>
     <button class="mode-btn" data-group="oboeru" data-mode="quiz">🎯 クイズモード</button>
     <button class="mode-btn" data-group="hatten" data-mode="shape">🔷 形当てクイズ</button>
     <button class="mode-btn" data-group="hatten" data-mode="locate">📌 場所当てクイズ</button>
@@ -2999,12 +3135,13 @@ header.title .sub {
         </div>
         <div id="learn-content" class="hidden">
           <div class="pref-region" id="learn-region">関東</div>
-          <div class="pref-name" id="learn-name">東京都</div>
           <div class="pref-kana" id="learn-kana">とうきょうと</div>
+          <div class="pref-name" id="learn-name">東京都</div>
           <div class="photo-wrap">
             <img id="learn-photo" src="" alt="">
             <div id="photo-loading" class="photo-loading">よみこみちゅう…</div>
           </div>
+          <div class="photo-caption" id="learn-caption"></div>
         </div>
       </div>
 
@@ -3035,6 +3172,58 @@ header.title .sub {
           <div style="display:flex;gap:6px;margin-top:10px">
             <button class="btn-mini" id="btn-point-back" style="flex:1">⬅ 地方をえらびなおす</button>
             <button class="btn-mini" id="btn-point-reset" style="flex:1">リセット</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- フラッシュカード -->
+      <div class="panel hidden" id="flash-panel">
+        <h2>🃏 フラッシュカード</h2>
+
+        <!-- 地方選択画面 -->
+        <div id="flash-stage-select">
+          <p style="margin:4px 0 8px;font-size:13px">地方を えらぼう。<br>赤く光った県の 名前を 言ってみよう！</p>
+          <div class="quiz-stage-list" id="flash-stage-list"></div>
+          <p style="font-size:12px;color:#777;margin:8px 0 0">「言えた！」に チェックした県は もう出てきません。チェックが つくまで くりかえし 出てくるよ。</p>
+        </div>
+
+        <!-- 進行中画面 -->
+        <div id="flash-active" class="hidden">
+          <div class="flash-stage-name" id="flash-stage-name"></div>
+          <div class="quiz-progress">
+            <span class="score">✔ 言えた <span id="flash-done-count">0</span></span>
+            <span>のこり <span id="flash-remain">0</span></span>
+          </div>
+          <div class="progress-bar"><span id="flash-bar"></span></div>
+          <div class="flash-round" id="flash-round"></div>
+          <div class="flash-card">
+            <div class="flash-q" id="flash-hidden">？</div>
+            <div class="flash-answer hidden" id="flash-answer">
+              <div class="flash-kana" id="flash-kana"></div>
+              <div class="flash-name" id="flash-name"></div>
+            </div>
+          </div>
+          <label class="flash-check concealed" id="flash-check-wrap">
+            <input type="checkbox" id="flash-check"><span class="box"></span><span>言えた！</span>
+          </label>
+          <div class="flash-nav">
+            <button class="btn-mini" id="flash-prev">◀ まえ</button>
+            <button class="btn-mini primary" id="flash-reveal">答えを見る</button>
+            <button class="btn-mini" id="flash-next">つぎ ▶</button>
+          </div>
+          <div class="flash-msg" id="flash-msg"></div>
+          <div class="quiz-actions" style="margin-top:8px;justify-content:center">
+            <button class="btn-mini" id="flash-back">⬅ 地方をえらびなおす</button>
+          </div>
+        </div>
+
+        <!-- クリア画面 -->
+        <div id="flash-clear" class="hidden" style="text-align:center">
+          <div class="flash-clear-title">🎉 ぜんぶ 言えたね！</div>
+          <p style="margin:4px 0 12px;font-size:14px" id="flash-clear-text"></p>
+          <div class="quiz-actions" style="justify-content:center">
+            <button class="btn-mini primary" id="flash-retry">🔁 もう一度</button>
+            <button class="btn-mini" id="flash-clear-back">⬅ 地方をえらびなおす</button>
           </div>
         </div>
       </div>
@@ -4137,7 +4326,7 @@ function setViewBoxForRegion(region) {
 
 // === 表示制御 ===
 function applyMode() {
-  app.classList.toggle("region-color", state.regionColor && state.mode !== "quiz" && state.mode !== "shape" && state.mode !== "locate" && state.mode !== "battle" && state.mode !== "sugoroku" && state.mode !== "puzzle" && state.mode !== "records" && state.mode !== "kanji" && state.mode !== "conquest");
+  app.classList.toggle("region-color", state.regionColor && state.mode !== "quiz" && state.mode !== "shape" && state.mode !== "locate" && state.mode !== "battle" && state.mode !== "sugoroku" && state.mode !== "puzzle" && state.mode !== "records" && state.mode !== "kanji" && state.mode !== "conquest" && state.mode !== "flash");
   app.classList.toggle("hide-labels", !state.showLabels);
   app.classList.toggle("quiz-mode", state.mode === "quiz");
   app.classList.toggle("point-mode", state.mode === "blank");
@@ -4149,6 +4338,7 @@ function applyMode() {
   app.classList.toggle("records-mode", state.mode === "records");
   app.classList.toggle("kanji-mode", state.mode === "kanji");
   app.classList.toggle("conquest-mode", state.mode === "conquest");
+  app.classList.toggle("flash-mode", state.mode === "flash");
 
   // 場所当てクイズの境界線消し（クイズ中のみ）は startLocateQuiz 側で制御
   if (state.mode !== "locate") {
@@ -4157,8 +4347,9 @@ function applyMode() {
 
   // 各パネルの表示
   document.getElementById("learn-panel").classList.toggle("hidden", state.mode !== "learn");
-  document.getElementById("legend-panel").classList.toggle("hidden", state.mode === "quiz" || state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest");
+  document.getElementById("legend-panel").classList.toggle("hidden", state.mode === "quiz" || state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash");
   document.getElementById("point-panel").classList.toggle("hidden", state.mode !== "blank");
+  document.getElementById("flash-panel").classList.toggle("hidden", state.mode !== "flash");
   document.getElementById("quiz-panel").classList.toggle("hidden", state.mode !== "quiz");
   document.getElementById("shape-panel").classList.toggle("hidden", state.mode !== "shape");
   document.getElementById("locate-panel").classList.toggle("hidden", state.mode !== "locate");
@@ -4175,13 +4366,13 @@ function applyMode() {
   document.getElementById("records-wrap").classList.toggle("show", state.mode === "records");
 
   // 県名トグルは指差しモード時/形当てモード時/場所当てクイズ時/対戦モード時/すごろく時/パズル時/記録時/漢字さがし時/県取り合戦時は非表示
-  document.getElementById("t-labels-wrap").classList.toggle("hidden", state.mode === "blank" || state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest");
+  document.getElementById("t-labels-wrap").classList.toggle("hidden", state.mode === "blank" || state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash");
 
   // 形当てクイズモード時は地図を隠して形クイズエリアを表示、それ以外は逆
   document.getElementById("map-wrap").classList.toggle("hidden", state.mode === "shape");
   document.getElementById("shape-wrap").classList.toggle("hidden", state.mode !== "shape");
   // 形当てクイズモード時/場所当てクイズ時/対戦モード時/すごろく時/パズル時/記録時/漢字さがし時/県取り合戦時はマップコントロール（県名トグル等）も隠す
-  document.getElementById("map-controls").classList.toggle("hidden", state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest");
+  document.getElementById("map-controls").classList.toggle("hidden", state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash");
 
   // 地図上のクラスをクリア
   Object.values(prefElements).forEach(el => {
@@ -4189,7 +4380,7 @@ function applyMode() {
                         "locate-correct","locate-wrong","locate-show-answer",
                         "kanji-found","kanji-wrong","kanji-hint","kanji-reveal",
                         "conquest-p1","conquest-p2","conquest-candidate",
-                        "conquest-just-taken-p1","conquest-just-taken-p2","conquest-wrong");
+                        "conquest-just-taken-p1","conquest-just-taken-p2","conquest-wrong","flash-target");
   });
   // ポップアップを消去
   popupLayer.innerHTML = "";
@@ -4250,6 +4441,14 @@ document.querySelectorAll(".mode-btn").forEach(btn => {
       // 指差し確認モードに入ったら地方選択画面を表示
       endPointStage();
       renderPointStageList();
+    }
+    if (state.mode === "flash") {
+      // フラッシュカードに入ったら地方選択画面を表示
+      endFlash();
+      renderFlashStageList();
+    } else if (flash.stage) {
+      // 他モードに切り替えたらフラッシュカードを終了
+      endFlash();
     }
     if (state.mode === "shape") {
       // 形当てクイズモードに入ったらステージ選択画面を表示
@@ -4497,6 +4696,10 @@ function onPrefClick(p) {
     handleQuizClick(p);
     return;
   }
+  if (state.mode === "flash") {
+    // フラッシュカードは地図をタップしても反応しない
+    return;
+  }
   if (state.mode === "kanji") {
     // 漢字さがしモードはアクティブ時のみ反応
     if (state.kanji && state.kanji.active) {
@@ -4593,12 +4796,64 @@ function updatePointPanel() {
   }
 }
 
+// 写真の説明（県コード順）
+const PHOTO_CAPTIONS = {
+  1: "さっぽろ雪まつりの雪像",
+  2: "青森ねぶた祭のねぶた",
+  3: "中尊寺（平泉）の参道",
+  4: "日本三景の松島",
+  5: "男鹿のなまはげ",
+  6: "最上川と山なみ",
+  7: "鶴ヶ城（会津若松城）",
+  8: "水戸・偕楽園の梅",
+  9: "日光東照宮の陽明門",
+  10: "富岡製糸場の糸をとる機械",
+  11: "川越の町並みと和がさ",
+  12: "東京ディズニーランドのシンデレラ城",
+  13: "東京スカイツリーと隅田川",
+  14: "横浜中華街",
+  15: "米どころ新潟の田んぼ",
+  16: "黒部ダム",
+  17: "兼六園の雪つり",
+  18: "福井駅前の恐竜（恐竜王国ふくい）",
+  19: "富士山と富士五湖",
+  20: "北アルプスの山々",
+  21: "白川郷の合掌造り",
+  22: "静岡県から見た富士山",
+  23: "名古屋城の金のしゃちほこ",
+  24: "伊勢のおかげ横丁",
+  25: "琵琶湖と琵琶湖大橋",
+  26: "金閣（鹿苑寺）",
+  27: "大阪城",
+  28: "明石海峡大橋",
+  29: "東大寺の大仏",
+  30: "那智の滝と青岸渡寺の三重塔",
+  31: "鳥取砂丘",
+  32: "出雲大社の大しめなわ",
+  33: "岡山後楽園の紅葉",
+  34: "原爆ドーム",
+  35: "秋芳洞の入り口",
+  36: "阿波おどり",
+  37: "金刀比羅宮（こんぴらさん）",
+  38: "愛媛のみかん",
+  39: "ダムの水門と橋",
+  40: "太宰府天満宮の楼門",
+  41: "吉野ヶ里遺跡",
+  42: "海の向こうに見える軍艦島",
+  43: "阿蘇山の火口",
+  44: "別府温泉の白池地獄",
+  45: "高千穂峡と真名井の滝",
+  46: "桜島",
+  47: "沖縄のさんご礁の海",
+};
+
 function showPrefDetail(p) {
   document.getElementById("learn-empty").classList.add("hidden");
   document.getElementById("learn-content").classList.remove("hidden");
   document.getElementById("learn-name").textContent = p.name;
   document.getElementById("learn-kana").textContent = p.kana;
   document.getElementById("learn-region").textContent = p.region + "地方";
+  document.getElementById("learn-caption").textContent = PHOTO_CAPTIONS[p.code] || "";
 
   const img = document.getElementById("learn-photo");
   const loading = document.getElementById("photo-loading");
@@ -7919,6 +8174,215 @@ document.getElementById("records-reset-btn").addEventListener("click", () => {
   renderRecords();
 });
 
+
+// ==========================================================================
+// === 🃏 フラッシュカード ===================================================
+// ==========================================================================
+const flash = {
+  stage: null,        // null=地方選択中, "北海道・東北"〜"九州","全国"
+  pool: [],           // この地方の県コード（全部）
+  round: [],          // 今の周で出す県コード
+  index: 0,           // 今の周の何枚目か
+  revealed: [],       // 今の周で答えを見たか
+  checked: new Set(), // 「言えた！」にチェックした県コード
+  roundNum: 1,        // 何周目か
+  msgTimer: null,
+};
+
+function shuffleFlash(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderFlashStageList() {
+  const list = document.getElementById("flash-stage-list");
+  list.innerHTML = "";
+  REGIONS.forEach(region => {
+    const btn = document.createElement("button");
+    btn.className = "stage-btn";
+    const count = PREFECTURES.filter(p => p.region === region).length;
+    btn.innerHTML = region + "<br><small>(" + count + ")</small>";
+    btn.addEventListener("click", () => startFlash(region));
+    list.appendChild(btn);
+  });
+  const fullBtn = document.createElement("button");
+  fullBtn.className = "stage-btn full";
+  fullBtn.innerHTML = "🌏 全国（47県）";
+  fullBtn.addEventListener("click", () => startFlash("全国"));
+  list.appendChild(fullBtn);
+
+  document.getElementById("flash-stage-select").classList.remove("hidden");
+  document.getElementById("flash-active").classList.add("hidden");
+  document.getElementById("flash-clear").classList.add("hidden");
+}
+
+function startFlash(stage) {
+  flash.stage = stage;
+  const pool = stage === "全国" ? PREFECTURES.slice() : PREFECTURES.filter(p => p.region === stage);
+  flash.pool = pool.map(p => p.code);
+  flash.checked = new Set();
+  flash.roundNum = 1;
+  flash.round = shuffleFlash(flash.pool);
+  flash.index = 0;
+  flash.revealed = flash.round.map(() => false);
+
+  // 九州のときは沖縄を左上のミニマップに
+  if (prefElements[47]) {
+    if (stage === "九州") {
+      prefElements[47].setAttribute("transform", OKINAWA_KYUSHU_TRANSFORM);
+      showOkinawaFrame();
+    } else {
+      prefElements[47].setAttribute("transform", OKINAWA_ORIGINAL_TRANSFORM);
+      hideOkinawaFrame();
+    }
+  }
+
+  // 地方を拡大表示
+  setViewBoxForRegion(stage);
+
+  // 対象外の県を薄くする
+  Object.values(prefElements).forEach(el => el.classList.remove("dimmed", "flash-target"));
+  if (stage !== "全国") {
+    PREFECTURES.forEach(p => {
+      if (p.region !== stage) prefElements[p.code].classList.add("dimmed");
+    });
+  }
+
+  document.getElementById("flash-stage-select").classList.add("hidden");
+  document.getElementById("flash-clear").classList.add("hidden");
+  document.getElementById("flash-active").classList.remove("hidden");
+  document.getElementById("flash-stage-name").textContent =
+    stage === "全国" ? "🌏 全国（47県）" : stage + "地方（" + flash.pool.length + "県）";
+  showFlashMsg("");
+
+  renderFlashCard();
+}
+
+function renderFlashCard() {
+  const code = flash.round[flash.index];
+  const p = prefByCode[code];
+  const revealed = flash.revealed[flash.index];
+
+  // 地図で強調
+  Object.values(prefElements).forEach(el => el.classList.remove("flash-target"));
+  prefElements[code].classList.add("flash-target");
+
+  // カード
+  document.getElementById("flash-hidden").classList.toggle("hidden", revealed);
+  document.getElementById("flash-answer").classList.toggle("hidden", !revealed);
+  document.getElementById("flash-name").textContent = p.name;
+  document.getElementById("flash-kana").textContent = p.kana;
+
+  // チェック
+  document.getElementById("flash-check-wrap").classList.toggle("concealed", !revealed);
+  document.getElementById("flash-check").checked = flash.checked.has(code);
+
+  // ボタン
+  document.getElementById("flash-reveal").disabled = revealed;
+  document.getElementById("flash-prev").disabled = flash.index === 0;
+
+  document.getElementById("flash-round").textContent =
+    flash.roundNum + "しゅう目　" + (flash.index + 1) + " / " + flash.round.length + "まい";
+
+  updateFlashProgress();
+}
+
+function updateFlashProgress() {
+  const done = flash.checked.size;
+  const total = flash.pool.length;
+  document.getElementById("flash-done-count").textContent = done;
+  document.getElementById("flash-remain").textContent = total - done;
+  document.getElementById("flash-bar").style.width = (total ? done / total * 100 : 0) + "%";
+}
+
+function showFlashMsg(text) {
+  const el = document.getElementById("flash-msg");
+  if (flash.msgTimer) clearTimeout(flash.msgTimer);
+  el.textContent = text;
+  el.style.opacity = text ? "1" : "0";
+  if (text) {
+    flash.msgTimer = setTimeout(() => { el.style.opacity = "0"; }, 2500);
+  }
+}
+
+function nextFlashRound() {
+  const rest = flash.round.filter(c => !flash.checked.has(c));
+  if (rest.length === 0) {
+    clearFlash();
+    return;
+  }
+  flash.roundNum++;
+  flash.round = shuffleFlash(rest);
+  flash.index = 0;
+  flash.revealed = flash.round.map(() => false);
+  showFlashMsg("のこり " + rest.length + "まい。もう一度 出てくるよ！");
+  renderFlashCard();
+}
+
+function clearFlash() {
+  Object.values(prefElements).forEach(el => el.classList.remove("flash-target"));
+  document.getElementById("flash-active").classList.add("hidden");
+  document.getElementById("flash-clear").classList.remove("hidden");
+  const name = flash.stage === "全国" ? "全国" : flash.stage + "地方";
+  document.getElementById("flash-clear-text").textContent =
+    name + "の " + flash.pool.length + "県を、" + flash.roundNum + "しゅうで ぜんぶ 言えました！";
+  playSound("correct");
+  showConfetti();
+}
+
+function endFlash() {
+  flash.stage = null;
+  flash.round = [];
+  flash.checked = new Set();
+  if (flash.msgTimer) clearTimeout(flash.msgTimer);
+  Object.values(prefElements).forEach(el => el.classList.remove("dimmed", "flash-target"));
+  if (prefElements[47]) {
+    prefElements[47].setAttribute("transform", OKINAWA_ORIGINAL_TRANSFORM);
+  }
+  hideOkinawaFrame();
+}
+
+document.getElementById("flash-reveal").addEventListener("click", () => {
+  if (!flash.stage) return;
+  flash.revealed[flash.index] = true;
+  renderFlashCard();
+});
+document.getElementById("flash-check").addEventListener("change", (e) => {
+  if (!flash.stage) return;
+  const code = flash.round[flash.index];
+  if (e.target.checked) flash.checked.add(code);
+  else flash.checked.delete(code);
+  updateFlashProgress();
+});
+document.getElementById("flash-next").addEventListener("click", () => {
+  if (!flash.stage) return;
+  if (flash.index < flash.round.length - 1) {
+    flash.index++;
+    renderFlashCard();
+  } else {
+    nextFlashRound();
+  }
+});
+document.getElementById("flash-prev").addEventListener("click", () => {
+  if (!flash.stage || flash.index === 0) return;
+  flash.index--;
+  renderFlashCard();
+});
+function backToFlashSelect() {
+  endFlash();
+  renderFlashStageList();
+  setViewBox(REGION_VIEWBOXES["全国"]);
+}
+document.getElementById("flash-back").addEventListener("click", backToFlashSelect);
+document.getElementById("flash-clear-back").addEventListener("click", backToFlashSelect);
+document.getElementById("flash-retry").addEventListener("click", () => {
+  const stage = flash.stage;
+  if (stage) startFlash(stage);
+});
 
 // === 大タブ（覚える・発展問題・ゲーム・記録）の切替 ===
 document.querySelectorAll(".main-tab-btn").forEach(tab => {

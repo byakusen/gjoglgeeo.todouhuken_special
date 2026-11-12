@@ -1742,6 +1742,40 @@ header.title .sub {
   50%      { filter: brightness(0.7) saturate(2) hue-rotate(-30deg); }
 }
 
+/* お宝アイコン（見つかった県に表示） */
+.conquest-treasure-marker {
+  font-size: 22px;
+  pointer-events: none;
+}
+/* ボーナス表示 */
+.conquest-bonus-info {
+  font-size: 12px;
+  color: #555;
+  text-align: center;
+  margin: 2px 0 6px;
+  line-height: 1.5;
+}
+.conquest-bonus-info strong { color: #b45309; }
+.conquest-player-card .detail {
+  font-size: 11px;
+  color: #777;
+  margin-top: 2px;
+}
+.conquest-bonus-pop {
+  display: block;
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 900;
+  color: #b45309;
+}
+.conquest-choice .kana {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: #777;
+  margin-top: 1px;
+}
+
 /* === 右パネル === */
 #conquest-panel h2 { margin-bottom: 6px; }
 
@@ -2709,6 +2743,69 @@ header.title .sub {
 .sugoroku-quiz-feedback.ok { color: #2c6a2c; }
 .sugoroku-quiz-feedback.ng { color: var(--accent); }
 
+/* サイコロのえらびボタン（あんしん・逆転） */
+.sugoroku-dice-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 10px;
+}
+.sugoroku-dice-sub {
+  font: inherit;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 8px 6px;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--ink);
+  color: var(--ink);
+  line-height: 1.3;
+  transition: transform 0.1s;
+}
+.sugoroku-dice-sub small { font-size: 11px; font-weight: 600; }
+.sugoroku-dice-sub.safe { background: linear-gradient(135deg, #d9f2d0, #b5d49a); }
+.sugoroku-dice-sub.boost { background: linear-gradient(135deg, #ffd6e7, #f5a3c7); grid-column: 1 / -1; }
+.sugoroku-dice-sub:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 4px 4px 0 var(--ink); }
+.sugoroku-dice-sub:active:not(:disabled) { transform: translate(2px,2px); box-shadow: 1px 1px 0 var(--ink); }
+.sugoroku-dice-sub:disabled { opacity: 0.5; cursor: not-allowed; }
+.sugoroku-dice-sub.hidden { display: none; }
+.sugoroku-event-msg.event { background: #7c5cc4; }
+.sugoroku-event-msg.bump { background: #e07b24; }
+/* クイズの選択肢のよみがな */
+.sugoroku-quiz-choice .kana {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  opacity: 0.75;
+  margin-top: 2px;
+}
+/* チャレンジ問題の県の形 */
+.sugoroku-quiz-shape {
+  display: block;
+  width: 170px;
+  height: 170px;
+  margin: 4px auto;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+}
+.sugoroku-quiz-shape.hidden { display: none; }
+/* ゴール画面のおみやげ一覧 */
+.sugoroku-goal-souvenirs {
+  font-size: 13px;
+  text-align: left;
+  background: #fff7d1;
+  border: 2px solid var(--ink);
+  border-radius: 10px;
+  padding: 8px 10px;
+  margin: 10px 0;
+  max-height: 150px;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+.sugoroku-goal-souvenirs:empty { display: none; }
+
 /* ゴール画面 */
 .sugoroku-goal-overlay {
   position: fixed;
@@ -2889,6 +2986,393 @@ header.title .sub {
 }
 
 .hidden { display: none !important; }
+
+/* === しんけいすいじゃく === */
+.app.memory-mode .layout { display: none; }
+#memory-wrap {
+  display: none;
+  position: relative;
+  background: var(--bg-paper);
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  box-shadow: 6px 6px 0 var(--ink);
+  padding: 16px;
+  margin: 8px auto 80px;
+  max-width: 1200px;
+}
+#memory-wrap.show { display: block; }
+.memory-start { text-align: center; padding: 10px; animation: fadeIn 0.3s; }
+.memory-start h2 { margin: 0 0 12px; font-size: 28px; color: var(--accent); }
+.memory-start .description {
+  font-size: 15px;
+  line-height: 1.7;
+  margin: 12px auto;
+  max-width: 720px;
+  text-align: left;
+  background: var(--soft);
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px dashed var(--ink);
+}
+.memory-start .description strong { color: var(--accent); }
+.memory-setting { margin: 14px 0; }
+.memory-setting h3 { font-size: 16px; margin: 0 0 8px; }
+.memory-opts { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.memory-opt {
+  font: inherit;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 18px;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  background: var(--bg-paper);
+  color: var(--ink);
+  box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer;
+  transition: transform 0.05s, box-shadow 0.05s, background 0.15s;
+}
+.memory-opt:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+.memory-opt.active { background: #ffe97a; }
+.memory-start-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+.memory-start-btn {
+  font: inherit;
+  font-size: 20px;
+  font-weight: 800;
+  padding: 14px 26px;
+  border: 4px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: 5px 5px 0 var(--ink);
+  cursor: pointer;
+  min-width: 200px;
+  color: var(--ink);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.memory-start-btn:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--ink); }
+.memory-start-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+.memory-start-btn small { display: block; font-size: 13px; font-weight: 600; }
+.memory-start-btn.solo { background: linear-gradient(135deg, #b5d49a, #94c5d6); }
+.memory-start-btn.versus { background: linear-gradient(135deg, #ffe6e0, #e0ecff); }
+.memory-best { font-size: 14px; color: #555; margin-top: 14px; min-height: 1.4em; }
+
+.memory-game { animation: fadeIn 0.3s; }
+.memory-topbar {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.memory-stat {
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  padding: 6px 16px;
+  box-shadow: 3px 3px 0 var(--ink);
+  font-weight: bold;
+  font-size: 20px;
+  text-align: center;
+  min-width: 120px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+.memory-stat small { display: block; font-size: 12px; color: #666; }
+.memory-stat.p1 { background: #ffe6e0; }
+.memory-stat.p2 { background: #e0ecff; }
+.memory-stat.turn { transform: scale(1.08); outline: 4px solid #ffd24a; }
+.memory-stat.wait { opacity: 0.55; }
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 6), 1fr);
+  gap: 10px;
+  max-width: calc(var(--cols, 6) * 135px);
+  margin: 0 auto;
+}
+@media (max-width: 900px) {
+  .memory-grid {
+    grid-template-columns: repeat(var(--cols-sm, 4), 1fr);
+    max-width: calc(var(--cols-sm, 4) * 150px);
+  }
+}
+.memory-card {
+  aspect-ratio: 4 / 5;
+  perspective: 800px;
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  color: var(--ink);
+}
+.memory-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.45s;
+  transform-style: preserve-3d;
+}
+.memory-card.flipped .memory-inner { transform: rotateY(180deg); }
+.memory-face {
+  position: absolute;
+  inset: 0;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 3px 3px 0 var(--ink);
+  overflow: hidden;
+  container-type: inline-size;
+}
+.memory-back {
+  background: repeating-linear-gradient(45deg, #d44b3a 0 10px, #e2685a 10px 20px);
+}
+.memory-back span {
+  background: var(--bg-paper);
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  width: 58%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(16px, 28cqw, 36px);
+}
+.memory-card:hover:not(.flipped) .memory-back { filter: brightness(1.08); }
+.memory-front { transform: rotateY(180deg); padding: 20px 4px 6px; }
+.memory-front.name { background: #eef6ff; }
+.memory-front.partner { background: #fff6e0; }
+.mc-tag {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  font-size: clamp(9px, 9cqw, 12px);
+  font-weight: bold;
+  padding: 2px 0;
+  text-align: center;
+  color: #fff;
+}
+.memory-front.name .mc-tag { background: var(--accent-2); }
+.memory-front.partner .mc-tag { background: #d97706; }
+.mc-kana { font-size: clamp(8px, 8.5cqw, 12px); color: #666; line-height: 1.2; text-align: center; }
+.mc-main {
+  font-size: clamp(11px, 19cqw, 26px);
+  font-weight: 900;
+  line-height: 1.25;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.mc-main.long { font-size: clamp(10px, 14cqw, 19px); }
+.mc-main.xlong { font-size: clamp(9px, 11.5cqw, 16px); }
+.memory-front svg { width: 90%; height: 82%; }
+.memory-front svg polygon,
+.memory-front svg path {
+  fill: #94c5d6;
+  stroke: var(--ink);
+  stroke-width: 1.2px;
+  vector-effect: non-scaling-stroke;
+}
+.memory-card.matched { cursor: default; }
+.memory-card.matched .memory-front { border-color: #2c6a2c; box-shadow: 0 0 0 3px #6ec46a, 3px 3px 0 var(--ink); }
+.memory-card.matched.by-p1 .memory-front { border-color: #b91c1c; box-shadow: 0 0 0 3px #f08080, 3px 3px 0 var(--ink); }
+.memory-card.matched.by-p2 .memory-front { border-color: #1d4ed8; box-shadow: 0 0 0 3px #6ba6d6, 3px 3px 0 var(--ink); }
+.memory-card.just-matched .memory-inner { animation: memory-pop 0.45s; }
+@keyframes memory-pop {
+  0% { transform: rotateY(180deg) scale(1); }
+  50% { transform: rotateY(180deg) scale(1.1); }
+  100% { transform: rotateY(180deg) scale(1); }
+}
+.memory-msg {
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  min-height: 1.6em;
+  margin: 14px 0 6px;
+}
+.memory-msg.good { color: #2c6a2c; }
+.memory-msg.bad { color: var(--accent); }
+.memory-msg.pop { animation: fadeIn 0.3s; }
+.memory-actions { text-align: center; margin-top: 6px; }
+.memory-result {
+  position: absolute;
+  inset: 0;
+  background: rgba(246, 241, 227, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s;
+  z-index: 5;
+}
+.memory-result.show { opacity: 1; pointer-events: auto; }
+.memory-result-card {
+  background: #fff;
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  box-shadow: 6px 6px 0 var(--ink);
+  padding: 20px 28px;
+  text-align: center;
+  max-width: 90%;
+}
+.memory-result-card h2 { margin: 0 0 8px; font-size: 28px; color: var(--accent); }
+.memory-result-card .stat { font-size: 18px; font-weight: bold; margin: 6px 0; line-height: 1.6; }
+.memory-result-card .newrec { color: #d97706; font-weight: 900; font-size: 18px; }
+.memory-result-card .btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+.memory-result-card button {
+  font: inherit;
+  font-size: 17px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 3px 3px 0 var(--ink);
+  background: var(--bg-paper);
+  cursor: pointer;
+}
+.memory-result-card button.primary { background: linear-gradient(135deg, #ffe97a, #ffb878); }
+@media (max-width: 600px) {
+  #memory-wrap { padding: 10px; }
+  .memory-grid { gap: 6px; }
+  .memory-face { border-width: 2px; border-radius: 8px; box-shadow: 2px 2px 0 var(--ink); }
+  .memory-front { padding: 16px 2px 4px; }
+  .memory-start-btn { min-width: 140px; font-size: 17px; padding: 12px 16px; }
+  .memory-opt { font-size: 14px; padding: 8px 12px; }
+  .memory-stat { font-size: 16px; min-width: 90px; padding: 4px 10px; }
+  .memory-msg { font-size: 15px; }
+}
+
+/* === ルートさがし === */
+.app.route-mode .label-layer { display: block; }
+.app.route-mode.route-hide-labels .label-layer { display: none; }
+.app.route-mode .label-layer text {
+  font-size: var(--route-label-size, 14px);
+  stroke-width: var(--route-label-stroke, 3px);
+}
+@media (max-width: 860px) {
+  .app.route-mode .label-layer text { font-size: calc(var(--route-label-size, 14px) * 1.3); }
+}
+#japan-map .prefecture.route-next polygon,
+#japan-map .prefecture.route-next path {
+  fill: #fff7c2 !important;
+  stroke: #ca8a04 !important;
+  stroke-width: 1.5px;
+}
+#japan-map .prefecture.route-short polygon,
+#japan-map .prefecture.route-short path {
+  fill: #bfdcf0 !important;
+}
+#japan-map .prefecture.route-path polygon,
+#japan-map .prefecture.route-path path {
+  fill: #ffd24a !important;
+  stroke: #92400e !important;
+  stroke-width: 1.5px;
+}
+#japan-map .prefecture.route-start polygon,
+#japan-map .prefecture.route-start path {
+  fill: #6ec46a !important;
+  stroke: #2c6a2c !important;
+  stroke-width: 2px;
+}
+#japan-map .prefecture.route-goal polygon,
+#japan-map .prefecture.route-goal path {
+  fill: #f08080 !important;
+  stroke: #7a2114 !important;
+  stroke-width: 2px;
+}
+#japan-map .prefecture.route-off { opacity: 0.3; }
+#japan-map .prefecture.route-off polygon,
+#japan-map .prefecture.route-off path { pointer-events: none; }
+#japan-map .prefecture.route-bad polygon,
+#japan-map .prefecture.route-bad path {
+  fill: #d44b3a !important;
+  animation: shake 0.4s;
+}
+.route-line {
+  fill: none;
+  stroke: #c2410c;
+  stroke-width: 4px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.85;
+}
+.route-line.best { stroke: #1d4ed8; stroke-dasharray: 8 6; opacity: 0.9; }
+.route-dot { fill: #c2410c; stroke: #fff; stroke-width: 1.5px; vector-effect: non-scaling-stroke; }
+.route-flag { fill: var(--ink); }
+
+.route-intro { font-size: 13px; margin: 4px 0 10px; color: #555; line-height: 1.6; }
+.route-intro strong { color: var(--accent); }
+.route-level-list { display: flex; flex-direction: column; gap: 8px; margin: 8px 0; }
+.route-level-btn {
+  font: inherit;
+  font-size: 17px;
+  font-weight: 800;
+  padding: 10px 14px;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  box-shadow: 4px 4px 0 var(--ink);
+  cursor: pointer;
+  text-align: left;
+  color: var(--ink);
+  background: var(--bg-paper);
+  transition: transform 0.1s, box-shadow 0.1s;
+  position: relative;
+}
+.route-level-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
+.route-level-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.route-level-btn small { display: block; font-size: 12px; font-weight: 600; color: #555; }
+.route-level-btn .best { position: absolute; right: 10px; top: 10px; font-size: 12px; font-weight: bold; color: #b45309; }
+.route-level-btn.easy { background: #dcf5d6; }
+.route-level-btn.normal { background: #fff3c4; }
+.route-level-btn.hard { background: #fde2dc; }
+.route-note { font-size: 11.5px; color: #777; margin: 8px 0 0; line-height: 1.5; }
+.route-goal-card {
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  padding: 8px 10px;
+  box-shadow: 3px 3px 0 var(--ink);
+  margin: 6px 0 8px;
+  text-align: center;
+}
+.route-endpoint { display: flex; align-items: baseline; justify-content: center; gap: 8px; }
+.route-endpoint span { font-size: 13px; font-weight: bold; }
+.route-endpoint strong { font-size: 22px; }
+.route-endpoint.start strong { color: #2c6a2c; }
+.route-endpoint.goal strong { color: var(--accent); }
+.route-arrow { font-size: 12px; color: #999; line-height: 1.2; }
+.route-hint { font-size: 12px; color: #92400e; text-align: center; margin: 2px 0; }
+.route-count { text-align: center; font-size: 14px; margin: 4px 0; }
+.route-count strong { font-size: 22px; color: #c2410c; }
+.route-chips { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin: 4px 0 6px; font-size: 12px; min-height: 22px; }
+.route-chip { background: #fff3c4; border: 1.5px solid var(--ink); border-radius: 999px; padding: 1px 8px; font-weight: bold; }
+.route-chip.start { background: #dcf5d6; }
+.route-chip.goal { background: #fde2dc; }
+.route-msg { text-align: center; font-weight: bold; font-size: 14px; min-height: 1.5em; margin: 4px 0; }
+.route-msg.bad { color: var(--accent); }
+.route-msg.good { color: #2c6a2c; }
+.route-msg.pop { animation: fadeIn 0.3s; }
+.route-answer {
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+  margin: 6px 0;
+  animation: fadeIn 0.35s;
+}
+.route-answer .title { font-size: 20px; font-weight: 900; color: var(--accent); }
+.route-answer .stars { font-size: 28px; letter-spacing: 2px; }
+.route-answer .detail { font-size: 14px; font-weight: bold; margin: 2px 0; }
+.route-best-path { font-size: 12px; color: #1d4ed8; margin: 6px 0; line-height: 1.6; }
+.route-result-box { text-align: center; animation: fadeIn 0.35s; }
+.route-result-box .big { font-size: 40px; font-weight: 900; color: #b45309; }
+.route-result-box .stars { font-size: 26px; }
+.route-labels-wrap { margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -2916,6 +3400,8 @@ header.title .sub {
     <button class="mode-btn" data-group="game" data-mode="battle">⚔️ 対戦モード</button>
     <button class="mode-btn" data-group="game" data-mode="sugoroku">🎲 すごろく</button>
     <button class="mode-btn" data-group="game" data-mode="conquest">⚔️ 県取り合戦</button>
+    <button class="mode-btn" data-group="game" data-mode="memory">🎴 しんけいすいじゃく</button>
+    <button class="mode-btn" data-group="game" data-mode="route">🗺️ ルートさがし</button>
     <button class="mode-btn" data-group="kiroku" data-mode="records">📊 記録</button>
   </div>
 
@@ -3433,8 +3919,10 @@ header.title .sub {
         <!-- セットアップ -->
         <div id="conquest-setup">
           <p class="conquest-intro">
-            <strong>となりの 県</strong>を タップして、<strong>クイズに 正解</strong>したら その県を 自分の 陣地に できる！<br>
-            たくさん とった ほうが 勝ち。
+            <strong>すきな 県</strong>を タップして、<strong>クイズに 正解</strong>したら その県を 自分の 陣地に できる！<br>
+            1県 ＝ <strong>1点</strong>。点数が 多い ほうが 勝ち。<br>
+            🎉 地方を ぜんぶ とったら <strong>＋10点</strong><br>
+            💎 どこかの 県に かくれた お宝（3こ）を 見つけたら <strong>＋5点</strong>
           </p>
           <div class="conquest-mode-buttons">
             <button class="conquest-mode-btn-big versus" id="conquest-versus-btn">
@@ -3455,12 +3943,14 @@ header.title .sub {
             <div class="conquest-player-card p1" id="conquest-p1-card">
               <div class="name" id="conquest-p1-name">🔴 赤</div>
               <div class="score" id="conquest-p1-score">0</div>
-              <div class="label">県</div>
+              <div class="label">点</div>
+              <div class="detail" id="conquest-p1-detail">0県</div>
             </div>
             <div class="conquest-player-card p2" id="conquest-p2-card">
               <div class="name" id="conquest-p2-name">🔵 青</div>
               <div class="score" id="conquest-p2-score">0</div>
-              <div class="label">県</div>
+              <div class="label">点</div>
+              <div class="detail" id="conquest-p2-detail">0県</div>
             </div>
           </div>
 
@@ -3469,9 +3959,10 @@ header.title .sub {
             <div class="conquest-question-card" id="conquest-turn-card">
               <p class="conquest-question-title" id="conquest-turn-title">🔴 赤の ターン</p>
               <p style="font-size:14px;margin:0">
-                <strong>となり</strong>の 黄色の県を タップしよう
+                <strong>まだ だれも とっていない 県</strong>を タップしよう
               </p>
             </div>
+            <div class="conquest-bonus-info" id="conquest-bonus-info"></div>
             <div class="conquest-feedback info" id="conquest-feedback">地図から 県を 選んでね</div>
             <div class="conquest-cpu-thinking" id="conquest-cpu-thinking" style="display:none">
               🤖 コンピュータが かんがえちゅう…
@@ -3508,12 +3999,12 @@ header.title .sub {
               <div class="score-card p1">
                 <div style="font-size:13px;font-weight:700" id="conquest-result-p1-name">🔴 赤</div>
                 <div class="big" id="conquest-result-p1-score">0</div>
-                <div style="font-size:11px;color:#777">県</div>
+                <div style="font-size:11px;color:#777" id="conquest-result-p1-detail">点</div>
               </div>
               <div class="score-card p2">
                 <div style="font-size:13px;font-weight:700" id="conquest-result-p2-name">🔵 青</div>
                 <div class="big" id="conquest-result-p2-score">0</div>
-                <div style="font-size:11px;color:#777">県</div>
+                <div style="font-size:11px;color:#777" id="conquest-result-p2-detail">点</div>
               </div>
             </div>
             <div style="margin-top:14px">
@@ -3521,6 +4012,79 @@ header.title .sub {
               <button class="conquest-btn" id="conquest-tomode-btn">モード選択へ</button>
             </div>
             <div id="conquest-result-stats"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ルートさがし -->
+      <div class="panel hidden" id="route-panel">
+        <h2>🗺️ ルートさがし</h2>
+
+        <!-- むずかしさ選択 -->
+        <div id="route-setup">
+          <p class="route-intro">
+            🚩<strong>出発</strong>の県から 🏁<strong>ゴール</strong>の県まで、<strong>となりの県</strong>を じゅんばんに タップして 道を つなごう！<br>
+            できるだけ <strong>少ない 回数</strong>で ゴールしよう。
+          </p>
+          <div class="route-level-list">
+            <button class="route-level-btn easy" data-level="easy">🟢 かんたん<small>2〜3回で ゴールできる・となりの県が 光る</small><span class="best" id="route-best-easy"></span></button>
+            <button class="route-level-btn normal" data-level="normal">🟡 ふつう<small>4〜6回で ゴールできる</small><span class="best" id="route-best-normal"></span></button>
+            <button class="route-level-btn hard" data-level="hard">🔴 むずかしい<small>7回 いじょう かかる 長い たび</small><span class="best" id="route-best-hard"></span></button>
+          </div>
+          <p class="route-note">
+            1回の ゲームは 5問。いちばん 少ない 回数で ゴールすると ⭐3つ！<br>
+            ※ 北海道と青森、本州と四国・九州は 橋や トンネルで つながっているので「となり」に なるよ。沖縄県は 使わないよ。
+          </p>
+        </div>
+
+        <!-- プレイ中 -->
+        <div id="route-active" class="hidden">
+          <div class="quiz-progress">
+            <span id="route-qnum">第1問 / 5</span>
+            <span class="score">⭐ <span id="route-stars">0</span></span>
+          </div>
+          <div class="progress-bar"><span id="route-bar"></span></div>
+          <div class="route-goal-card">
+            <div class="route-endpoint start"><span>🚩 出発</span><strong id="route-start-name"></strong></div>
+            <div class="route-arrow">▼</div>
+            <div class="route-endpoint goal"><span>🏁 ゴール</span><strong id="route-goal-name"></strong></div>
+          </div>
+          <div class="route-hint" id="route-hint">黄色く 光っている県が となりの県だよ</div>
+          <div class="route-count">すすんだ回数：<strong id="route-moves">0</strong> 回</div>
+          <div class="route-chips" id="route-chips"></div>
+          <div class="route-msg" id="route-msg"></div>
+          <div class="quiz-actions" id="route-play-actions" style="justify-content:center">
+            <button class="btn-mini" id="route-undo-btn">↩ 1つもどす</button>
+            <button class="btn-mini" id="route-reset-btn">🔄 出発から</button>
+            <button class="btn-mini danger" id="route-giveup-btn">😣 こたえを見る</button>
+          </div>
+          <div id="route-answer" class="route-answer hidden">
+            <div class="title" id="route-answer-title">🏁 ゴール！</div>
+            <div class="stars" id="route-answer-stars"></div>
+            <div class="detail" id="route-answer-detail"></div>
+            <div class="route-best-path" id="route-answer-best"></div>
+            <button class="btn-mini primary" id="route-next-btn">つぎの問題 ▶</button>
+          </div>
+          <div class="route-labels-wrap">
+            <label class="toggle"><input type="checkbox" id="route-labels" checked><span class="knob"></span><span>県名を見せる</span></label>
+          </div>
+          <div class="quiz-actions" style="margin-top:8px;justify-content:flex-end">
+            <button class="btn-mini" id="route-quit-btn">やめる</button>
+          </div>
+        </div>
+
+        <!-- 結果 -->
+        <div id="route-result" class="hidden">
+          <div class="route-result-box">
+            <div style="font-size:20px;font-weight:900" id="route-result-title">🎉 5問 クリア！</div>
+            <div class="big"><span id="route-result-score">0</span><span style="font-size:18px"> / 15</span></div>
+            <div class="stars" id="route-result-stars"></div>
+            <p style="font-size:14px;margin:6px 0" id="route-result-msg"></p>
+            <p style="font-size:14px;font-weight:bold;color:#d97706;margin:4px 0" id="route-result-best"></p>
+            <div class="quiz-actions" style="justify-content:center;margin-top:10px">
+              <button class="btn-mini primary" id="route-again-btn">🔁 もう一回</button>
+              <button class="btn-mini" id="route-tolevel-btn">⬅ むずかしさを えらぶ</button>
+            </div>
           </div>
         </div>
       </div>
@@ -3607,14 +4171,19 @@ header.title .sub {
     <h2>🎲 すごろく</h2>
     <div class="description">
       <strong>北海道から沖縄まで すごろくで日本一周！</strong><br>
-      ・サイコロを ふって 出た数だけ 進む。<br>
-      ・止まった県で <strong>クイズ</strong>！正解で 進める、不正解で1マス もどる。<br>
-      ・とちゅうに <strong>とくしゅマス</strong>あり：<br>
+      ・サイコロを えらんで ふる：🎲ふつう（1〜6）／🐢あんしん（1〜3）<br>
+      ・止まった県で <strong>クイズ</strong>！<br>
+      &nbsp;&nbsp;正解 → その県の <strong>おみやげ</strong>ゲット＋おまけで1マス進む<br>
+      &nbsp;&nbsp;不正解 → 1マス もどる<br>
+      ・ときどき <strong>ご当地イベント</strong>が 起きるよ！<br>
+      ・<strong>とくしゅマス</strong>：<br>
       &nbsp;&nbsp;🎁 ラッキーマス：問題なしで2マス進む<br>
       &nbsp;&nbsp;💧 温泉マス：1回休み（草津・別府・道後）<br>
-      &nbsp;&nbsp;✈️ ワープマス：沖縄に止まると おどろきの効果<br>
-      &nbsp;&nbsp;🎯 チャレンジマス：難問！正解で3マス進む<br>
-      ・先に <strong>ゴール（沖縄）</strong>に着いた方の勝ち！
+      &nbsp;&nbsp;✈️ 空港マス：飛行機で4マス先へ（東京・大阪）<br>
+      &nbsp;&nbsp;🎯 チャレンジマス：県の形クイズ！正解で3マス進む<br>
+      ・2人のときは：相手と 同じ県に 止まると 相手が2マス もどる！<br>
+      &nbsp;&nbsp;負けている方は 🚀逆転サイコロ（4〜6）を 1回だけ 使える<br>
+      ・<strong>点数</strong>＝おみやげの数（1こ1点）＋ゴール一番乗り（＋5点）
     </div>
     <div class="sugoroku-mode-select">
       <button class="sugoroku-mode-btn solo" id="sugoroku-solo-btn">
@@ -3693,6 +4262,10 @@ header.title .sub {
           </div>
         </div>
         <button class="sugoroku-dice-btn" id="sugoroku-dice-btn">サイコロを ふる！</button>
+        <div class="sugoroku-dice-options">
+          <button class="sugoroku-dice-sub safe" id="sugoroku-dice-safe-btn">🐢 あんしんサイコロ<br><small>1〜3が 出る</small></button>
+          <button class="sugoroku-dice-sub boost hidden" id="sugoroku-dice-boost-btn">🚀 逆転サイコロ <small>4〜6が 出る（1回だけ）</small></button>
+        </div>
       </div>
 
       <div class="sugoroku-event-msg" id="sugoroku-event-msg">日本一周のたび、スタート！</div>
@@ -3710,6 +4283,7 @@ header.title .sub {
     <h3 id="sugoroku-quiz-title">クイズ！</h3>
     <div class="q-pref" id="sugoroku-quiz-pref">○○県で クイズ</div>
     <div class="q-text" id="sugoroku-quiz-text">問題はここに表示</div>
+    <svg class="sugoroku-quiz-shape hidden" id="sugoroku-quiz-shape" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"></svg>
     <div class="sugoroku-quiz-choices" id="sugoroku-quiz-choices"></div>
     <div class="sugoroku-quiz-feedback" id="sugoroku-quiz-feedback"></div>
   </div>
@@ -3721,6 +4295,7 @@ header.title .sub {
     <h2 id="sugoroku-goal-title">🎉 ゴール！</h2>
     <div class="goal-msg" id="sugoroku-goal-msg">日本一周、達成！</div>
     <div class="goal-stat" id="sugoroku-goal-stat"></div>
+    <div class="sugoroku-goal-souvenirs" id="sugoroku-goal-souvenirs"></div>
     <button class="btn-replay" id="sugoroku-replay-btn">もう一回</button>
     <button class="btn-back" id="sugoroku-back-btn">スタート画面にもどる</button>
   </div>
@@ -3759,6 +4334,69 @@ header.title .sub {
       <p id="puzzle-clear-time"></p>
       <p id="puzzle-clear-best" style="font-weight:800;color:#d97706;display:none">🏆 新記録！</p>
       <button class="puzzle-btn primary" id="puzzle-clear-again-btn" style="margin-top:20px;font-size:18px;padding:12px 24px">もう一回</button>
+    </div>
+  </div>
+</div>
+
+<!-- しんけいすいじゃく ラッパー -->
+<div id="memory-wrap">
+  <!-- スタート画面 -->
+  <div id="memory-start" class="memory-start">
+    <h2>🎴 都道府県 しんけいすいじゃく</h2>
+    <div class="description">
+      <strong>カードを 2まい めくって、ペアを 見つけよう！</strong><br>
+      ・<span style="color:#2a6a8f;font-weight:bold">青いカード</span>には 県の名前、<span style="color:#d97706;font-weight:bold">オレンジのカード</span>には 県庁所在地・特産品・県の形が かいてあるよ。<br>
+      ・同じ県の 青とオレンジが そろったら ペア！<br>
+      ・2人のときは：ペアを 見つけたら もう一度 めくれる。ペアの数が 多い方が 勝ち！
+    </div>
+    <div class="memory-setting">
+      <h3>ペアの しゅるい</h3>
+      <div class="memory-opts" id="memory-kind-opts">
+        <button class="memory-opt active" data-kind="capital">🏛 県庁所在地</button>
+        <button class="memory-opt" data-kind="specialty">🍎 特産品</button>
+        <button class="memory-opt" data-kind="shape">🔷 県の形</button>
+      </div>
+    </div>
+    <div class="memory-setting">
+      <h3>カードの まい数</h3>
+      <div class="memory-opts" id="memory-pairs-opts">
+        <button class="memory-opt active" data-pairs="6">12まい</button>
+        <button class="memory-opt" data-pairs="8">16まい</button>
+        <button class="memory-opt" data-pairs="10">20まい</button>
+      </div>
+    </div>
+    <div class="memory-start-btns">
+      <button class="memory-start-btn solo" id="memory-solo-btn">🧒 1人で あそぶ<small>タイムに ちょうせん！</small></button>
+      <button class="memory-start-btn versus" id="memory-versus-btn">🆚 2人で 対戦<small>赤と青で 勝負！</small></button>
+    </div>
+    <div class="memory-best" id="memory-best"></div>
+  </div>
+
+  <!-- ゲーム画面 -->
+  <div id="memory-game" class="memory-game hidden">
+    <div class="memory-topbar" id="memory-topbar">
+      <div class="memory-stat" id="memory-time-box"><small>⏱ タイム</small><span id="memory-time">00:00</span></div>
+      <div class="memory-stat" id="memory-moves-box"><small>めくった回数</small><span id="memory-moves">0</span></div>
+      <div class="memory-stat p1" id="memory-p1-box"><small>🔴 赤</small><span id="memory-p1-score">0</span> ペア</div>
+      <div class="memory-stat p2" id="memory-p2-box"><small>🔵 青</small><span id="memory-p2-score">0</span> ペア</div>
+    </div>
+    <div class="memory-grid" id="memory-grid"></div>
+    <div class="memory-msg" id="memory-msg"></div>
+    <div class="memory-actions">
+      <button class="btn-mini" id="memory-quit-btn">やめる</button>
+    </div>
+  </div>
+
+  <!-- 結果 -->
+  <div class="memory-result" id="memory-result">
+    <div class="memory-result-card">
+      <h2 id="memory-result-title">🎉 クリア！</h2>
+      <div class="stat" id="memory-result-stat"></div>
+      <div class="newrec" id="memory-result-rec"></div>
+      <div class="btns">
+        <button class="primary" id="memory-again-btn">🔁 もう一回</button>
+        <button id="memory-back-btn">⬅ せっていに もどる</button>
+      </div>
     </div>
   </div>
 </div>
@@ -3874,6 +4512,71 @@ const PREF_FLOWERS = {
   37: "オリーブ", 38: "ミカンの花", 39: "ヤマモモ", 40: "ウメ",
   41: "クスの花", 42: "ウンゼンツツジ", 43: "リンドウ", 44: "ブンゴウメ",
   45: "ハマユウ", 46: "ミヤマキリシマ", 47: "デイゴ",
+};
+
+// === 各県の有名な建物・遺跡（県取り合戦モードのクイズ用） ===
+// 県名が入っている名前（〇〇城など）は答えがわかってしまうので使わない
+const FAMOUS_PLACES = {
+  1: "五稜郭", 2: "三内丸山遺跡", 3: "中尊寺金色堂", 4: "瑞巌寺",
+  5: "角館の武家屋敷", 6: "山寺", 7: "鶴ヶ城", 8: "牛久大仏",
+  9: "日光東照宮", 10: "富岡製糸場", 11: "鉄道博物館", 12: "成田山新勝寺",
+  13: "国会議事堂", 14: "鎌倉の大仏", 15: "佐渡金山", 16: "黒部ダム",
+  17: "金沢城", 18: "恐竜博物館", 19: "武田神社", 20: "善光寺",
+  21: "白川郷の合掌造り", 22: "登呂遺跡", 23: "名古屋城", 24: "伊勢神宮",
+  25: "延暦寺", 26: "金閣寺", 27: "通天閣", 28: "姫路城",
+  29: "法隆寺", 30: "高野山", 31: "水木しげるロード", 32: "石見銀山",
+  33: "吉備津神社", 34: "原爆ドーム", 35: "錦帯橋", 36: "祖谷のかずら橋",
+  37: "金刀比羅宮", 38: "道後温泉本館", 39: "桂浜の坂本龍馬像", 40: "太宰府天満宮",
+  41: "吉野ヶ里遺跡", 42: "軍艦島", 43: "通潤橋", 44: "宇佐神宮",
+  45: "西都原古墳群", 46: "種子島宇宙センター", 47: "首里城",
+};
+
+// === 県庁所在地以外の有名な市町村（県取り合戦モードのクイズ用） ===
+const FAMOUS_CITIES = {
+  1: "函館市", 2: "八戸市", 3: "花巻市", 4: "気仙沼市",
+  5: "男鹿市", 6: "天童市", 7: "会津若松市", 8: "つくば市",
+  9: "那須町", 10: "草津町", 11: "川越市", 12: "浦安市",
+  13: "八王子市", 14: "箱根町", 15: "長岡市", 16: "高岡市",
+  17: "加賀市", 18: "鯖江市", 19: "富士吉田市", 20: "松本市",
+  21: "高山市", 22: "浜松市", 23: "豊田市", 24: "鈴鹿市",
+  25: "彦根市", 26: "宇治市", 27: "堺市", 28: "西宮市",
+  29: "明日香村", 30: "白浜町", 31: "米子市", 32: "出雲市",
+  33: "倉敷市", 34: "尾道市", 35: "下関市", 36: "鳴門市",
+  37: "丸亀市", 38: "今治市", 39: "四万十市", 40: "北九州市",
+  41: "有田町", 42: "佐世保市", 43: "阿蘇市", 44: "別府市",
+  45: "高千穂町", 46: "指宿市", 47: "石垣市",
+};
+
+// 建物・市町村のよみがな（選択肢の下に小さく表示）
+const CONQUEST_READINGS = {
+  "五稜郭": "ごりょうかく", "三内丸山遺跡": "さんないまるやまいせき", "中尊寺金色堂": "ちゅうそんじ こんじきどう",
+  "瑞巌寺": "ずいがんじ", "角館の武家屋敷": "かくのだての ぶけやしき", "山寺": "やまでら",
+  "鶴ヶ城": "つるがじょう", "牛久大仏": "うしく だいぶつ", "日光東照宮": "にっこう とうしょうぐう",
+  "富岡製糸場": "とみおか せいしじょう", "鉄道博物館": "てつどう はくぶつかん", "成田山新勝寺": "なりたさん しんしょうじ",
+  "国会議事堂": "こっかい ぎじどう", "鎌倉の大仏": "かまくらの だいぶつ", "佐渡金山": "さど きんざん",
+  "黒部ダム": "くろべ ダム", "金沢城": "かなざわじょう", "恐竜博物館": "きょうりゅう はくぶつかん",
+  "武田神社": "たけだ じんじゃ", "善光寺": "ぜんこうじ", "白川郷の合掌造り": "しらかわごうの がっしょうづくり",
+  "登呂遺跡": "とろ いせき", "名古屋城": "なごやじょう", "伊勢神宮": "いせ じんぐう",
+  "延暦寺": "えんりゃくじ", "金閣寺": "きんかくじ", "通天閣": "つうてんかく",
+  "姫路城": "ひめじじょう", "法隆寺": "ほうりゅうじ", "高野山": "こうやさん",
+  "水木しげるロード": "みずきしげる ロード", "石見銀山": "いわみ ぎんざん", "吉備津神社": "きびつ じんじゃ",
+  "原爆ドーム": "げんばく ドーム", "錦帯橋": "きんたいきょう", "祖谷のかずら橋": "いやの かずらばし",
+  "金刀比羅宮": "ことひらぐう（こんぴらさん）", "道後温泉本館": "どうご おんせん ほんかん", "桂浜の坂本龍馬像": "かつらはまの さかもと りょうま ぞう",
+  "太宰府天満宮": "だざいふ てんまんぐう", "吉野ヶ里遺跡": "よしのがり いせき", "軍艦島": "ぐんかんじま",
+  "通潤橋": "つうじゅんきょう", "宇佐神宮": "うさ じんぐう", "西都原古墳群": "さいとばる こふんぐん",
+  "種子島宇宙センター": "たねがしま うちゅう センター", "首里城": "しゅりじょう",
+  "函館市": "はこだてし", "八戸市": "はちのへし", "花巻市": "はなまきし", "気仙沼市": "けせんぬまし",
+  "男鹿市": "おがし", "天童市": "てんどうし", "会津若松市": "あいづわかまつし", "つくば市": "つくばし",
+  "那須町": "なすまち", "草津町": "くさつまち", "川越市": "かわごえし", "浦安市": "うらやすし",
+  "八王子市": "はちおうじし", "箱根町": "はこねまち", "長岡市": "ながおかし", "高岡市": "たかおかし",
+  "加賀市": "かがし", "鯖江市": "さばえし", "富士吉田市": "ふじよしだし", "松本市": "まつもとし",
+  "高山市": "たかやまし", "浜松市": "はままつし", "豊田市": "とよたし", "鈴鹿市": "すずかし",
+  "彦根市": "ひこねし", "宇治市": "うじし", "堺市": "さかいし", "西宮市": "にしのみやし",
+  "明日香村": "あすかむら", "白浜町": "しらはまちょう", "米子市": "よなごし", "出雲市": "いずもし",
+  "倉敷市": "くらしきし", "尾道市": "おのみちし", "下関市": "しものせきし", "鳴門市": "なるとし",
+  "丸亀市": "まるがめし", "今治市": "いまばりし", "四万十市": "しまんとし", "北九州市": "きたきゅうしゅうし",
+  "有田町": "ありたちょう", "佐世保市": "させぼし", "阿蘇市": "あそし", "別府市": "べっぷし",
+  "高千穂町": "たかちほちょう", "指宿市": "いぶすきし", "石垣市": "いしがきし",
 };
 
 // === 形が似てる県グループ ===
@@ -4280,6 +4983,11 @@ const state = {
     currentQuiz: null,    // {question, correctAnswer, choices}
     phase: "select",      // "select"=県選択中, "quiz"=クイズ中
     locked: false,
+    p1Bonus: 0,           // ボーナス点（地方制覇・お宝）
+    p2Bonus: 0,
+    treasures: [],        // お宝がかくれている県のコード（3つ）
+    foundTreasures: [],   // 見つかったお宝の県コード
+    completedRegions: [], // 制覇された地方 [{region, player}]
   }
 };
 
@@ -4326,7 +5034,7 @@ function setViewBoxForRegion(region) {
 
 // === 表示制御 ===
 function applyMode() {
-  app.classList.toggle("region-color", state.regionColor && state.mode !== "quiz" && state.mode !== "shape" && state.mode !== "locate" && state.mode !== "battle" && state.mode !== "sugoroku" && state.mode !== "puzzle" && state.mode !== "records" && state.mode !== "kanji" && state.mode !== "conquest" && state.mode !== "flash");
+  app.classList.toggle("region-color", state.regionColor && state.mode !== "quiz" && state.mode !== "shape" && state.mode !== "locate" && state.mode !== "battle" && state.mode !== "sugoroku" && state.mode !== "puzzle" && state.mode !== "records" && state.mode !== "kanji" && state.mode !== "conquest" && state.mode !== "flash" && state.mode !== "memory" && state.mode !== "route");
   app.classList.toggle("hide-labels", !state.showLabels);
   app.classList.toggle("quiz-mode", state.mode === "quiz");
   app.classList.toggle("point-mode", state.mode === "blank");
@@ -4339,6 +5047,8 @@ function applyMode() {
   app.classList.toggle("kanji-mode", state.mode === "kanji");
   app.classList.toggle("conquest-mode", state.mode === "conquest");
   app.classList.toggle("flash-mode", state.mode === "flash");
+  app.classList.toggle("memory-mode", state.mode === "memory");
+  app.classList.toggle("route-mode", state.mode === "route");
 
   // 場所当てクイズの境界線消し（クイズ中のみ）は startLocateQuiz 側で制御
   if (state.mode !== "locate") {
@@ -4347,7 +5057,7 @@ function applyMode() {
 
   // 各パネルの表示
   document.getElementById("learn-panel").classList.toggle("hidden", state.mode !== "learn");
-  document.getElementById("legend-panel").classList.toggle("hidden", state.mode === "quiz" || state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash");
+  document.getElementById("legend-panel").classList.toggle("hidden", state.mode === "quiz" || state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash" || state.mode === "memory" || state.mode === "route");
   document.getElementById("point-panel").classList.toggle("hidden", state.mode !== "blank");
   document.getElementById("flash-panel").classList.toggle("hidden", state.mode !== "flash");
   document.getElementById("quiz-panel").classList.toggle("hidden", state.mode !== "quiz");
@@ -4355,6 +5065,7 @@ function applyMode() {
   document.getElementById("locate-panel").classList.toggle("hidden", state.mode !== "locate");
   document.getElementById("kanji-panel").classList.toggle("hidden", state.mode !== "kanji");
   document.getElementById("conquest-panel").classList.toggle("hidden", state.mode !== "conquest");
+  document.getElementById("route-panel").classList.toggle("hidden", state.mode !== "route");
 
   // 対戦モード用ラッパーの表示
   document.getElementById("battle-wrap").classList.toggle("show", state.mode === "battle");
@@ -4364,15 +5075,17 @@ function applyMode() {
   document.getElementById("puzzle-wrap").classList.toggle("show", state.mode === "puzzle");
   // 記録モード用ラッパーの表示
   document.getElementById("records-wrap").classList.toggle("show", state.mode === "records");
+  // しんけいすいじゃく用ラッパーの表示
+  document.getElementById("memory-wrap").classList.toggle("show", state.mode === "memory");
 
   // 県名トグルは指差しモード時/形当てモード時/場所当てクイズ時/対戦モード時/すごろく時/パズル時/記録時/漢字さがし時/県取り合戦時は非表示
-  document.getElementById("t-labels-wrap").classList.toggle("hidden", state.mode === "blank" || state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash");
+  document.getElementById("t-labels-wrap").classList.toggle("hidden", state.mode === "blank" || state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash" || state.mode === "memory" || state.mode === "route");
 
   // 形当てクイズモード時は地図を隠して形クイズエリアを表示、それ以外は逆
   document.getElementById("map-wrap").classList.toggle("hidden", state.mode === "shape");
   document.getElementById("shape-wrap").classList.toggle("hidden", state.mode !== "shape");
   // 形当てクイズモード時/場所当てクイズ時/対戦モード時/すごろく時/パズル時/記録時/漢字さがし時/県取り合戦時はマップコントロール（県名トグル等）も隠す
-  document.getElementById("map-controls").classList.toggle("hidden", state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash");
+  document.getElementById("map-controls").classList.toggle("hidden", state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash" || state.mode === "memory" || state.mode === "route");
 
   // 地図上のクラスをクリア
   Object.values(prefElements).forEach(el => {
@@ -4380,7 +5093,8 @@ function applyMode() {
                         "locate-correct","locate-wrong","locate-show-answer",
                         "kanji-found","kanji-wrong","kanji-hint","kanji-reveal",
                         "conquest-p1","conquest-p2","conquest-candidate",
-                        "conquest-just-taken-p1","conquest-just-taken-p2","conquest-wrong","flash-target");
+                        "conquest-just-taken-p1","conquest-just-taken-p2","conquest-wrong","flash-target",
+                        "route-start","route-goal","route-path","route-next","route-short","route-off","route-bad");
   });
   // ポップアップを消去
   popupLayer.innerHTML = "";
@@ -4418,6 +5132,16 @@ function applyMode() {
   // 県取り合戦モードから離れたら状態リセット
   if (state.mode !== "conquest") {
     if (typeof resetConquestUIToSetup === "function") resetConquestUIToSetup();
+  }
+
+  // しんけいすいじゃくから離れたら状態リセット
+  if (state.mode !== "memory") {
+    if (window.memoryReady) resetMemoryToStart();
+  }
+
+  // ルートさがしから離れたら状態リセット
+  if (state.mode !== "route") {
+    if (window.routeReady) resetRouteToSetup();
   }
 
   // 指差し確認モード以外に切り替わったら、沖縄を元の位置に戻す＋枠を消す
@@ -4698,6 +5422,10 @@ function onPrefClick(p) {
   }
   if (state.mode === "flash") {
     // フラッシュカードは地図をタップしても反応しない
+    return;
+  }
+  if (state.mode === "route") {
+    if (window.routeReady) handleRouteClick(p);
     return;
   }
   if (state.mode === "kanji") {
@@ -6607,10 +7335,51 @@ const SUGOROKU_SPECIAL = {
   lucky: [11, 22, 28, 36, 43],   // 埼玉・静岡・兵庫・徳島・熊本
   // 温泉マス: 1回休み
   onsen: [10, 38, 44],            // 群馬(草津)・愛媛(道後)・大分(別府)
-  // ワープマス: 沖縄に止まったら → 大ジャンプ
-  warp: [47],                     // 沖縄
-  // チャレンジマス: 難問、正解で3マス進む（県名と県庁所在地が違う県を中心に）
-  challenge: [4, 9, 14, 19, 28, 32],  // 宮城(仙台)・栃木(宇都宮)・神奈川(横浜)・山梨(甲府)・兵庫(神戸)・島根(松江)
+  // 空港マス: 飛行機で4マス先へ
+  warp: [13, 27],                 // 東京(羽田)・大阪(関西空港)
+  // チャレンジマス: 県の形クイズ、正解で3マス進む
+  challenge: [4, 9, 19, 32, 42],  // 宮城・栃木・山梨・島根・長崎
+};
+
+// ご当地イベント（ふつうのマスで ときどき起きる）
+// type: "forward"=進む / "back"=もどる / "skip"=1回休み / "souvenir"=おみやげ
+const SUGOROKU_EVENT_RATE = 0.3;
+const SUGOROKU_EVENTS = {
+  "北海道・東北": [
+    { text: "🚄 新幹線「はやぶさ」に 乗った！", type: "forward", n: 2 },
+    { text: "❄️ 大雪で 電車が とまった…", type: "skip" },
+    { text: "🎆 夏祭りで 地元の人と なかよくなった！", type: "souvenir" },
+  ],
+  "関東": [
+    { text: "🚃 電車を 乗りまちがえた…", type: "back", n: 1 },
+    { text: "🚗 高速道路が 大じゅうたい…", type: "skip" },
+    { text: "🗼 東京観光で おみやげを 買った！", type: "souvenir" },
+  ],
+  "中部": [
+    { text: "🗻 富士山を 見ながら 新幹線で ビューン！", type: "forward", n: 2 },
+    { text: "⛰️ 山道で 道に まよった…", type: "back", n: 2 },
+    { text: "🌷 農家の人に 野菜を もらった！", type: "souvenir" },
+  ],
+  "近畿": [
+    { text: "🦌 奈良で シカに せんべいを とられた！", type: "back", n: 1 },
+    { text: "🚄 新幹線「のぞみ」で ビューン！", type: "forward", n: 2 },
+    { text: "🏯 お寺めぐりで ゆっくりしすぎた…", type: "skip" },
+  ],
+  "中国": [
+    { text: "🚲 しまなみ海道を 自転車で 走った！", type: "forward", n: 2 },
+    { text: "🏜️ 鳥取砂丘で 足を とられた…", type: "back", n: 1 },
+    { text: "🍑 おいしい くだものを もらった！", type: "souvenir" },
+  ],
+  "四国": [
+    { text: "🌀 鳴門の うず潮を 見ていたら 時間が たった…", type: "back", n: 2 },
+    { text: "🚶 お遍路さんと いっしょに 歩いた！", type: "forward", n: 1 },
+    { text: "🍊 地元の人に おみやげを もらった！", type: "souvenir" },
+  ],
+  "九州": [
+    { text: "🌋 火山の 灰で 前が 見えない…", type: "skip" },
+    { text: "🚄 九州新幹線で ビューン！", type: "forward", n: 3 },
+    { text: "♨️ 温泉で ぽかぽか、元気いっぱい！", type: "forward", n: 1 },
+  ],
 };
 
 const sugorokuSvg = document.getElementById("sugoroku-svg");
@@ -6644,11 +7413,11 @@ function startSugoroku(mode) {
   s.active = true;
   s.mode = mode;
   if (mode === "solo") {
-    s.players = [{ id: 1, pos: 0, skipNext: false, turns: 0, finished: false }];
+    s.players = [{ id: 1, pos: 0, skipNext: false, turns: 0, finished: false, souvenirs: [], boostUsed: false }];
   } else {
     s.players = [
-      { id: 1, pos: 0, skipNext: false, turns: 0, finished: false },
-      { id: 2, pos: 0, skipNext: false, turns: 0, finished: false },
+      { id: 1, pos: 0, skipNext: false, turns: 0, finished: false, souvenirs: [], boostUsed: false },
+      { id: 2, pos: 0, skipNext: false, turns: 0, finished: false, souvenirs: [], boostUsed: false },
     ];
   }
   s.currentPlayerIdx = 0;
@@ -6666,8 +7435,119 @@ function startSugoroku(mode) {
   const dice = document.getElementById("sugoroku-dice-3d");
   dice.classList.remove("rolling", "bounce");
   dice.style.transform = "rotateX(0deg) rotateY(0deg)";
-  document.getElementById("sugoroku-dice-btn").disabled = false;
-  document.getElementById("sugoroku-dice-btn").textContent = "サイコロを ふる！";
+  document.getElementById("sugoroku-dice-btn").textContent = "🎲 サイコロを ふる！（1〜6）";
+  setSugorokuDiceEnabled(true);
+}
+
+// === サイコロボタンの有効/無効と、逆転サイコロの表示 ===
+function setSugorokuDiceEnabled(on) {
+  const s = state.sugoroku;
+  document.getElementById("sugoroku-dice-btn").disabled = !on;
+  document.getElementById("sugoroku-dice-safe-btn").disabled = !on;
+  const boostBtn = document.getElementById("sugoroku-dice-boost-btn");
+  boostBtn.disabled = !on;
+  boostBtn.classList.toggle("hidden", !canUseSugorokuBoost());
+}
+// 逆転サイコロを使えるか（2人対戦で、相手より後ろにいて、まだ使っていない）
+function canUseSugorokuBoost() {
+  const s = state.sugoroku;
+  if (!s.active || s.mode !== "versus") return false;
+  const cur = s.players[s.currentPlayerIdx];
+  if (!cur || cur.finished || cur.boostUsed) return false;
+  const other = s.players.find(p => p !== cur);
+  return !!other && !other.finished && cur.pos < other.pos;
+}
+function getSugorokuLabel(player) {
+  return player.id === 1 ? "🔴 赤" : "🔵 青";
+}
+
+// === おみやげ ===
+// まだ持っていなければ追加して名前を返す。持っていたら null
+function giveSugorokuSouvenir(player, code) {
+  if (player.souvenirs.includes(code)) return null;
+  player.souvenirs.push(code);
+  return SPECIALTIES[code] || null;
+}
+// 点数（おみやげ1こ1点＋ゴール一番乗り5点）
+function getSugorokuScore(player) {
+  return player.souvenirs.length + (player.firstGoal ? 5 : 0);
+}
+
+// === イベントやおまけで進む・もどる（止まったマスの効果は起きない） ===
+function sugorokuQuietMove(player, n, done) {
+  let newPos = player.pos + n;
+  if (newPos > SUGOROKU_GOAL_POS) newPos = SUGOROKU_GOAL_POS;
+  if (newPos < 0) newPos = 0;
+  player.pos = newPos;
+  updateSugorokuPanel();
+  updateSugorokuMapState();
+  if (newPos >= SUGOROKU_GOAL_POS) {
+    setTimeout(() => handleSugorokuGoal(player), 1000);
+    return;
+  }
+  setTimeout(done, 1200);
+}
+
+// === ご当地イベント ===
+function runSugorokuEvent(player) {
+  const pref = prefByCode[player.pos];
+  const list = SUGOROKU_EVENTS[pref.region] || [];
+  const ev = list[Math.floor(Math.random() * list.length)];
+  const msgEl = document.getElementById("sugoroku-event-msg");
+  msgEl.className = "sugoroku-event-msg event";
+  let effect = "";
+  if (ev.type === "forward") effect = `${ev.n}マス 進む！`;
+  else if (ev.type === "back") effect = `${ev.n}マス もどる…`;
+  else if (ev.type === "skip") effect = "次は 1回休み…";
+  else if (ev.type === "souvenir") {
+    const got = giveSugorokuSouvenir(player, pref.code);
+    effect = got ? `🎁「${got}」を ゲット！` : "（もう 持っていたので おまけで1マス 進む！）";
+  }
+  msgEl.innerHTML = `📣 ご当地イベント！<br>${ev.text}<br>${effect}`;
+  updateSugorokuPanel();
+
+  setTimeout(() => {
+    if (ev.type === "forward") {
+      sugorokuQuietMove(player, ev.n, nextSugorokuPlayer);
+    } else if (ev.type === "back") {
+      sugorokuQuietMove(player, -ev.n, nextSugorokuPlayer);
+    } else if (ev.type === "skip") {
+      player.skipNext = true;
+      updateSugorokuPanel();
+      nextSugorokuPlayer();
+    } else {
+      if (effect.indexOf("ゲット") >= 0) nextSugorokuPlayer();
+      else sugorokuQuietMove(player, 1, nextSugorokuPlayer);
+    }
+  }, 2600);
+}
+
+// === チャレンジ問題（県の形クイズ） ===
+// 止まった県とは別の県の形を出す（止まった県だと答えがわかるため）
+function makeSugorokuShapeQuiz(excludeCode) {
+  const pool = PREFECTURES.filter(p => p.code !== excludeCode);
+  const target = pool[Math.floor(Math.random() * pool.length)];
+  const similar = getSimilarPrefCodes(target.code).map(c => prefByCode[c].name);
+  const others = PREFECTURES.filter(p => p.code !== target.code).map(p => p.name)
+    .filter(n => !similar.includes(n)).sort(() => Math.random() - 0.5);
+  const wrongs = [...similar.sort(() => Math.random() - 0.5), ...others].slice(0, 3);
+  return {
+    question: "🔷 この 形は どこの 県？",
+    correctAnswer: target.name,
+    choices: [target.name, ...wrongs].sort(() => Math.random() - 0.5),
+    shapeCode: target.code,
+  };
+}
+// 対戦モードの形描画を使って、すごろくのクイズ画面に県の形をうつす
+function drawSugorokuQuizShape(code) {
+  const target = document.getElementById("sugoroku-quiz-shape");
+  const savedHTML = battleSvg.innerHTML;
+  const savedVB = battleSvg.getAttribute("viewBox");
+  drawBattleShape(prefByCode[code], false);
+  target.innerHTML = battleSvg.innerHTML;
+  target.setAttribute("viewBox", battleSvg.getAttribute("viewBox"));
+  battleSvg.innerHTML = savedHTML;
+  if (savedVB) battleSvg.setAttribute("viewBox", savedVB);
 }
 
 // 地図を描画（地図SVGをコピー＋特殊マスのアイコン）
@@ -6844,7 +7724,8 @@ function updateSugorokuPanel() {
     else posLabel = prefByCode[player.pos].name;
     div.innerHTML = `<div class="pname-label">${label}</div>
                      <div class="turn-num">${posLabel}</div>
-                     <div style="font-size:11px">${player.turns}ターン目${player.skipNext ? "（次は休み）" : ""}</div>`;
+                     <div style="font-size:11px">${player.turns}ターン目${player.skipNext ? "（次は休み）" : ""}</div>
+                     <div style="font-size:12px;margin-top:2px">🎁 おみやげ ${player.souvenirs.length}こ</div>`;
     statusEl.appendChild(div);
   });
 }
@@ -6862,7 +7743,8 @@ const DICE_FINAL_ROT = {
 };
 
 let sugorokuRollAnimId = null;
-document.getElementById("sugoroku-dice-btn").addEventListener("click", () => {
+// kind: "normal"=1〜6 / "safe"=1〜3 / "boost"=4〜6
+function rollSugorokuDice(kind) {
   const s = state.sugoroku;
   if (!s.active || s.rolling || s.awaitingQuiz) return;
 
@@ -6886,9 +7768,14 @@ document.getElementById("sugoroku-dice-btn").addEventListener("click", () => {
     return;
   }
 
+  if (kind === "boost") {
+    if (!canUseSugorokuBoost()) return;
+    cur.boostUsed = true;
+  }
+
   // サイコロ演出
   s.rolling = true;
-  document.getElementById("sugoroku-dice-btn").disabled = true;
+  setSugorokuDiceEnabled(false);
   const dice = document.getElementById("sugoroku-dice-3d");
   dice.classList.add("rolling");
   dice.classList.remove("bounce");
@@ -6901,7 +7788,10 @@ document.getElementById("sugoroku-dice-btn").addEventListener("click", () => {
   const startTime = performance.now();
   const rollDuration = 1000;  // 1秒間振り続ける
 
-  const finalRoll = Math.floor(Math.random() * 6) + 1;
+  let finalRoll;
+  if (kind === "safe") finalRoll = Math.floor(Math.random() * 3) + 1;
+  else if (kind === "boost") finalRoll = Math.floor(Math.random() * 3) + 4;
+  else finalRoll = Math.floor(Math.random() * 6) + 1;
 
   function spin() {
     const elapsed = performance.now() - startTime;
@@ -6935,7 +7825,10 @@ document.getElementById("sugoroku-dice-btn").addEventListener("click", () => {
     }
   }
   sugorokuRollAnimId = requestAnimationFrame(spin);
-});
+}
+document.getElementById("sugoroku-dice-btn").addEventListener("click", () => rollSugorokuDice("normal"));
+document.getElementById("sugoroku-dice-safe-btn").addEventListener("click", () => rollSugorokuDice("safe"));
+document.getElementById("sugoroku-dice-boost-btn").addEventListener("click", () => rollSugorokuDice("boost"));
 
 // プレイヤーを n マス進める（または戻す）
 function movePlayerBy(player, n) {
@@ -6974,6 +7867,24 @@ function handleSugorokuLanding(player) {
   const s = state.sugoroku;
   const code = player.pos;
 
+  // 2人対戦：相手と同じ県に止まったら、相手を2マスもどす
+  if (s.mode === "versus" && !player.bumpDone) {
+    const other = s.players.find(p => p !== player);
+    if (other && !other.finished && other.pos === code && code > 0) {
+      other.pos = Math.max(0, other.pos - 2);
+      player.bumpDone = true;
+      document.getElementById("sugoroku-event-msg").innerHTML =
+        `💥 ${getSugorokuLabel(other)} と ぶつかった！<br>${getSugorokuLabel(other)} は 2マス もどる！`;
+      document.getElementById("sugoroku-event-msg").className = "sugoroku-event-msg bump";
+      playSound("wrong");
+      updateSugorokuPanel();
+      updateSugorokuMapState();
+      setTimeout(() => handleSugorokuLanding(player), 1800);
+      return;
+    }
+  }
+  player.bumpDone = false;
+
   // ラッキーマス
   if (SUGOROKU_SPECIAL.lucky.includes(code)) {
     document.getElementById("sugoroku-event-msg").innerHTML =
@@ -6998,12 +7909,15 @@ function handleSugorokuLanding(player) {
     return;
   }
 
-  // ワープマス（沖縄＝ゴール直前なので、効果なしでクイズへ）
-  // ※ 沖縄は実質ゴールマスなので、ゴール扱いにすべきだが、
-  //   handleSugorokuGoalで処理されている。ここまで到達することは稀
+  // 空港マス：飛行機で4マス先へ
   if (SUGOROKU_SPECIAL.warp.includes(code)) {
-    // 既にゴール扱いなのでここは通らない（保険）
-    handleSugorokuGoal(player);
+    document.getElementById("sugoroku-event-msg").innerHTML =
+      "✈️ 空港マス！ 飛行機で 4マス先へ ひとっとび！";
+    document.getElementById("sugoroku-event-msg").className = "sugoroku-event-msg warp";
+    playSound("correct");
+    setTimeout(() => {
+      movePlayerBy(player, 4);
+    }, 1400);
     return;
   }
 
@@ -7012,11 +7926,17 @@ function handleSugorokuLanding(player) {
     s.quizBonus = 3;  // 正解で+3マス
     s.quizPenalty = 1; // 不正解で-1マス
     document.getElementById("sugoroku-event-msg").innerHTML =
-      "🎯 チャレンジマス！ なんもんに正解で 3マス進める！";
+      "🎯 チャレンジマス！ 県の形クイズに 正解で 3マス進める！";
     document.getElementById("sugoroku-event-msg").className = "sugoroku-event-msg challenge";
     setTimeout(() => {
       askSugorokuQuiz(player, true);
     }, 1500);
+    return;
+  }
+
+  // 通常マス → ときどき ご当地イベント
+  if (Math.random() < SUGOROKU_EVENT_RATE) {
+    setTimeout(() => runSugorokuEvent(player), 400);
     return;
   }
 
@@ -7035,80 +7955,39 @@ function askSugorokuQuiz(player, isChallenge) {
   s.awaitingQuiz = true;
   s.quizPref = pref;
 
-  // クイズタイプをランダム選択
-  // 県取り合戦と同じ4種類：county(地方)/capital(県庁所在地)/specialty(特産品)/flower(県の花)
-  const types = ["region", "capital", "specialty", "flower"];
-  const type = types[Math.floor(Math.random() * types.length)];
-  s.quizType = type;
-
-  let questionText, choices, correct;
-  if (type === "region") {
-    // 地方当て
-    questionText = pref.name + " の 地方は どこ？";
-    correct = pref.region;
-    const allRegions = ["北海道・東北", "関東", "中部", "近畿", "中国", "四国", "九州"];
-    choices = makeChoicesFromPool(correct, allRegions, 4);
-  } else if (type === "capital") {
-    // 県庁所在地（県名＋市の引っかけを含める）
-    questionText = pref.name + " の 県庁所在地は？";
-    const cap = CAPITALS[pref.code];
-    correct = cap.city;
-
-    // 「県名+市」の引っかけ
-    const shortName = pref.name.replace(/(都|府|県|道)$/, "");
-    const fakeCity = shortName + "市";
-    const fakeIsValid =
-      fakeCity !== correct &&    // 正解と被らない
-      pref.code !== 1 &&          // 北海道は除外
-      pref.code !== 13;           // 東京は除外
-
-    const allCapitals = Object.values(CAPITALS).map(c => c.city);
-    if (fakeIsValid) {
-      // 引っかけ必須＋他県の県庁所在地2つ
-      const wrongs = [fakeCity];
-      const remaining = allCapitals
-        .filter(c => c !== correct && c !== fakeCity)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 2);
-      wrongs.push(...remaining);
-      choices = [correct, ...wrongs].sort(() => Math.random() - 0.5);
-    } else {
-      // 引っかけ作れない県は今まで通り
-      choices = makeChoicesFromPool(correct, allCapitals, 4);
-    }
-  } else if (type === "specialty") {
-    // 特産品
-    questionText = pref.name + " の 特産品（とくさんひん）は？";
-    correct = SPECIALTIES[pref.code];
-    // 他県の特産品（正解と同じものは除外、重複除去）
-    const others = Object.entries(SPECIALTIES)
-      .filter(([code, v]) => parseInt(code) !== pref.code && v !== correct)
-      .map(([_, v]) => v);
-    const uniq = [...new Set(others)];
-    choices = makeChoicesFromPool(correct, [correct, ...uniq], 4);
-  } else {
-    // 県の花
-    questionText = pref.name + " の 県の花は？";
-    correct = PREF_FLOWERS[pref.code];
-    const others = Object.entries(PREF_FLOWERS)
-      .filter(([code, v]) => parseInt(code) !== pref.code && v !== correct)
-      .map(([_, v]) => v);
-    const uniq = [...new Set(others)];
-    choices = makeChoicesFromPool(correct, [correct, ...uniq], 4);
-  }
-
+  // クイズ：ふつうのマスは県取り合戦と同じ5種類、チャレンジマスは県の形クイズ
+  const quiz = isChallenge ? makeSugorokuShapeQuiz(pref.code) : makeConquestQuiz(pref.code);
+  s.quizType = isChallenge ? "shape" : "normal";
+  const questionText = quiz.question;
+  const choices = quiz.choices;
+  const correct = quiz.correctAnswer;
   s.quizCorrect = correct;
 
   // オーバーレイ表示
   document.getElementById("sugoroku-quiz-pref").innerHTML =
     (isChallenge ? "🎯 チャレンジ！ " : "") + "📍 " + pref.name + " で クイズ";
+  document.getElementById("sugoroku-quiz-title").textContent = isChallenge ? "🎯 チャレンジ問題！" : "クイズ！";
   document.getElementById("sugoroku-quiz-text").textContent = questionText;
+  const shapeEl = document.getElementById("sugoroku-quiz-shape");
+  if (isChallenge) {
+    drawSugorokuQuizShape(quiz.shapeCode);
+    shapeEl.classList.remove("hidden");
+  } else {
+    shapeEl.classList.add("hidden");
+  }
   const choicesEl = document.getElementById("sugoroku-quiz-choices");
   choicesEl.innerHTML = "";
   choices.forEach(choice => {
     const btn = document.createElement("button");
     btn.className = "sugoroku-quiz-choice";
+    btn.dataset.answer = choice;
     btn.textContent = choice;
+    if (quiz.showKana && CONQUEST_READINGS[choice]) {
+      const k = document.createElement("span");
+      k.className = "kana";
+      k.textContent = CONQUEST_READINGS[choice];
+      btn.appendChild(k);
+    }
     btn.addEventListener("click", () => handleSugorokuAnswer(choice, btn, player));
     choicesEl.appendChild(btn);
   });
@@ -7147,28 +8026,32 @@ function handleSugorokuAnswer(chosen, btn, player) {
 
     setTimeout(() => {
       document.getElementById("sugoroku-quiz-overlay").classList.remove("show");
+      // 正解のごほうび：その県のおみやげ
+      const got = giveSugorokuSouvenir(player, player.pos);
+      const giftText = got ? `🎁「${got}」を ゲット！<br>` : "";
+      updateSugorokuPanel();
       // 正解ボーナス（チャレンジマスなら+3）
       if (s.quizBonus > 0) {
         document.getElementById("sugoroku-event-msg").innerHTML =
-          "🎯 大正解！ さらに " + s.quizBonus + " マス進む！";
+          giftText + "🎯 大正解！ さらに " + s.quizBonus + " マス進む！";
         document.getElementById("sugoroku-event-msg").className = "sugoroku-event-msg challenge";
         setTimeout(() => {
           movePlayerBy(player, s.quizBonus);
-        }, 1200);
+        }, 1600);
       } else {
         document.getElementById("sugoroku-event-msg").innerHTML =
-          "✅ 正解！ ターン終わり。";
+          "✅ 正解！ " + giftText + "おまけで 1マス 進む！";
         document.getElementById("sugoroku-event-msg").className = "sugoroku-event-msg lucky";
         setTimeout(() => {
-          nextSugorokuPlayer();
-        }, 1200);
+          sugorokuQuietMove(player, 1, nextSugorokuPlayer);
+        }, 1600);
       }
     }, 1200);
   } else {
     btn.classList.add("wrong");
     // 正解のボタンも示す
     document.querySelectorAll(".sugoroku-quiz-choice").forEach(b => {
-      if (b.textContent === s.quizCorrect) b.classList.add("correct");
+      if (b.dataset.answer === s.quizCorrect) b.classList.add("correct");
     });
     fb.textContent = "ざんねん…正解は " + s.quizCorrect;
     fb.className = "sugoroku-quiz-feedback ng";
@@ -7213,8 +8096,8 @@ function nextSugorokuPlayer() {
   } while (s.players[s.currentPlayerIdx].finished);
 
   updateSugorokuPanel();
-  document.getElementById("sugoroku-dice-btn").disabled = false;
   s.rolling = false;
+  setSugorokuDiceEnabled(true);
   // サイコロのbounceアニメをリセット（次のロールでまたかけるため）
   const dice = document.getElementById("sugoroku-dice-3d");
   if (dice) dice.classList.remove("bounce");
@@ -7229,8 +8112,10 @@ function nextSugorokuPlayer() {
 
 // プレイヤーがゴールした
 function handleSugorokuGoal(player) {
+  if (player.finished) return;
   player.finished = true;
   player.pos = SUGOROKU_GOAL_POS;
+  if (!state.sugoroku.players.some(p => p.firstGoal)) player.firstGoal = true;
   updateSugorokuPanel();
   updateSugorokuMapState();
 
@@ -7254,7 +8139,7 @@ function finishSugoroku() {
     const player = s.players[0];
     titleText = "🏁 ゴール！";
     msgText = "日本一周、達成！";
-    statText = player.turns + " ターンで クリア！";
+    statText = player.turns + " ターンで クリア！ 🎁おみやげ " + player.souvenirs.length + "こ";
 
     // ベストタイム更新
     if (!s.bestSoloTurns || player.turns < s.bestSoloTurns) {
@@ -7273,18 +8158,28 @@ function finishSugoroku() {
       msgText = "また 挑戦してね！";
       statText = "";
     } else {
-      // 先にゴールした人を勝者とする
-      const winner = finished[0];  // 最初にゴールした人
+      // 点数（おみやげ＋ゴール一番乗り5点）で勝ち負けを決める
+      const p1 = s.players[0], p2 = s.players[1];
+      const sc1 = getSugorokuScore(p1), sc2 = getSugorokuScore(p2);
       titleText = "🏁 ゴール！";
-      const label = winner.id === 1 ? "🔴 赤" : "🔵 青";
-      msgText = label + " の 勝ち！";
-      statText = "🎉 " + winner.turns + " ターンでゴール！";
+      if (sc1 === sc2) msgText = "🤝 ひきわけ！";
+      else msgText = getSugorokuLabel(sc1 > sc2 ? p1 : p2) + " の 勝ち！";
+      statText = `🔴 ${sc1}点　対　🔵 ${sc2}点`;
     }
   }
 
   document.getElementById("sugoroku-goal-title").textContent = titleText;
   document.getElementById("sugoroku-goal-msg").innerHTML = msgText;
   document.getElementById("sugoroku-goal-stat").textContent = statText;
+  // おみやげ一覧
+  const souvEl = document.getElementById("sugoroku-goal-souvenirs");
+  souvEl.innerHTML = s.players.map(p => {
+    const names = p.souvenirs.map(c => SPECIALTIES[c]).filter(Boolean);
+    const head = s.mode === "versus"
+      ? `<strong>${getSugorokuLabel(p)}</strong>（🎁${p.souvenirs.length}こ${p.firstGoal ? "＋一番乗り5点" : ""}）`
+      : `<strong>🎁 あつめた おみやげ</strong>`;
+    return `${head}：${names.length ? names.join("、") : "なし"}`;
+  }).join("<br>");
   document.getElementById("sugoroku-goal-overlay").classList.add("show");
 
   showConfetti();
@@ -8107,6 +9002,31 @@ function renderRecords() {
     },
   ]));
 
+  // === ⑧ しんけいすいじゃく ===
+  const memBest = getMemoryBest();
+  if (Object.keys(memBest).length) anyRecord = true;
+  const memItems = [];
+  [["capital", "県庁所在地"], ["specialty", "特産品"], ["shape", "県の形"]].forEach(([k, lbl]) => {
+    [6, 8, 10].forEach(n => {
+      const b = memBest[k + "-" + n];
+      memItems.push({
+        label: `${lbl}・${n * 2}まい`,
+        value: b ? `${formatTimeMS(b.time)}（${b.moves}回）` : null,
+      });
+    });
+  });
+  body.appendChild(buildSection("🎴 しんけいすいじゃく（1人プレイ ベストタイム）", memItems));
+
+  // === ⑨ ルートさがし ===
+  let routeBest = {};
+  try { routeBest = JSON.parse(localStorage.getItem("routeBestStars") || "{}"); } catch (e) {}
+  if (Object.keys(routeBest).length) anyRecord = true;
+  body.appendChild(buildSection("🗺️ ルートさがし（ベスト ⭐の数 / 15）", [
+    { label: "かんたん", value: routeBest.easy ? `⭐ ${routeBest.easy}` : null },
+    { label: "ふつう", value: routeBest.normal ? `⭐ ${routeBest.normal}` : null },
+    { label: "むずかしい", value: routeBest.hard ? `⭐ ${routeBest.hard}` : null },
+  ]));
+
   // 何もない場合のメッセージ
   if (!anyRecord) {
     const msg = document.createElement("div");
@@ -8158,6 +9078,8 @@ document.getElementById("records-reset-btn").addEventListener("click", () => {
     "sugorokuBestSolo",
     "kanjiBestTime",
     "conquestStats",
+    "memoryBest",
+    "routeBestStars",
     "quizStars",  // 念のため
   ];
   keys.forEach(k => localStorage.removeItem(k));
@@ -8797,18 +9719,62 @@ function getTerritories(player) {
 function getAllTaken() {
   return [...state.conquest.p1Territories, ...state.conquest.p2Territories];
 }
-// プレイヤーが攻めることができる候補（自陣の隣接で、まだ取られていない県）
+// プレイヤーが攻めることができる候補（まだ取られていない県ならどこでもOK）
 function getConquestCandidates(player) {
-  const my = getTerritories(player);
   const taken = getAllTaken();
-  const candidates = new Set();
-  for (const code of my) {
-    const neighbors = PREF_ADJACENCY[code] || [];
-    for (const n of neighbors) {
-      if (!taken.includes(n)) candidates.add(n);
-    }
+  return PREFECTURES.map(p => p.code).filter(code => !taken.includes(code));
+}
+
+// 地方ごとの県コード一覧
+const CONQUEST_REGIONS = ["北海道・東北", "関東", "中部", "近畿", "中国", "四国", "九州"];
+function getRegionCodes(region) {
+  return PREFECTURES.filter(p => p.region === region).map(p => p.code);
+}
+// 合計点（県の数＋ボーナス）
+function getConquestScore(player) {
+  const c = state.conquest;
+  return getTerritories(player).length + (player === 1 ? c.p1Bonus : c.p2Bonus);
+}
+function addConquestBonus(player, pts) {
+  if (player === 1) state.conquest.p1Bonus += pts;
+  else state.conquest.p2Bonus += pts;
+}
+
+// 見つかったお宝を地図に表示
+function renderConquestTreasures() {
+  let layer = document.getElementById("conquest-treasure-layer");
+  if (!layer) {
+    layer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    layer.setAttribute("id", "conquest-treasure-layer");
+    mapEl.appendChild(layer);
   }
-  return Array.from(candidates);
+  layer.innerHTML = "";
+  const c = state.conquest;
+  if (state.mode !== "conquest") return;
+  c.foundTreasures.forEach(code => {
+    const p = prefByCode[code];
+    if (!p) return;
+    const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    t.setAttribute("x", p.cx);
+    t.setAttribute("y", p.cy + 8);
+    t.setAttribute("text-anchor", "middle");
+    t.setAttribute("class", "conquest-treasure-marker");
+    t.textContent = "💎";
+    layer.appendChild(t);
+  });
+}
+function clearConquestTreasures() {
+  const layer = document.getElementById("conquest-treasure-layer");
+  if (layer) layer.innerHTML = "";
+}
+
+// ボーナスの案内表示
+function renderConquestBonusInfo() {
+  const el = document.getElementById("conquest-bonus-info");
+  if (!el) return;
+  const c = state.conquest;
+  const left = c.treasures.length - c.foundTreasures.length;
+  el.innerHTML = `💎 お宝 のこり <strong>${left}</strong> こ（＋5点）　🎉 地方を ぜんぶ とると <strong>＋10点</strong>`;
 }
 
 // 地図表示の更新
@@ -8822,23 +9788,19 @@ function renderConquestMap() {
   state.conquest.p2Territories.forEach(c => {
     if (prefElements[c]) prefElements[c].classList.add("conquest-p2");
   });
-  // 現在のプレイヤーが攻撃できる候補を黄色く点滅（人間プレイヤー時のみ）
-  const c = state.conquest;
-  const isCpuTurn = (c.mode === "cpu" && c.currentPlayer === 2);
-  const showCands = (c.phase === "select" && !isCpuTurn && !c.locked);
-  if (showCands) {
-    const cands = getConquestCandidates(c.currentPlayer);
-    cands.forEach(code => {
-      if (prefElements[code]) prefElements[code].classList.add("conquest-candidate");
-    });
-  }
+  // どの県でも選べるので、候補の黄色表示はしない
 }
 
 // ステータス表示更新
 function renderConquestStatus() {
   const c = state.conquest;
-  document.getElementById("conquest-p1-score").textContent = c.p1Territories.length;
-  document.getElementById("conquest-p2-score").textContent = c.p2Territories.length;
+  document.getElementById("conquest-p1-score").textContent = getConquestScore(1);
+  document.getElementById("conquest-p2-score").textContent = getConquestScore(2);
+  document.getElementById("conquest-p1-detail").textContent =
+    `${c.p1Territories.length}県` + (c.p1Bonus > 0 ? ` ＋ ボーナス${c.p1Bonus}` : "");
+  document.getElementById("conquest-p2-detail").textContent =
+    `${c.p2Territories.length}県` + (c.p2Bonus > 0 ? ` ＋ ボーナス${c.p2Bonus}` : "");
+  renderConquestBonusInfo();
   document.getElementById("conquest-p1-card").classList.toggle("active", c.currentPlayer === 1);
   document.getElementById("conquest-p2-card").classList.toggle("active", c.currentPlayer === 2);
   document.getElementById("conquest-p1-name").textContent = CONQUEST_LABELS.P1;
@@ -8872,10 +9834,10 @@ function setConquestFeedback(text, type) {
 
 // === クイズ生成 ===
 
-// 県に対して 4種類（地方/県庁所在地/特産品/県の花）からランダムに1問生成
+// 県に対して 5種類（地方/県庁所在地/特産品/有名な建物・遺跡/有名な市町村）からランダムに1問生成
 // 戻り値: {question, correctAnswer, choices}
 function makeConquestQuiz(prefCode) {
-  const types = ["region", "capital", "specialty", "flower"];
+  const types = ["region", "capital", "specialty", "place", "city"];
   const type = types[Math.floor(Math.random() * types.length)];
   const target = prefByCode[prefCode];
 
@@ -8952,20 +9914,23 @@ function makeConquestQuiz(prefCode) {
     };
   }
 
-  if (type === "flower") {
-    const fl = PREF_FLOWERS[prefCode];
-    if (!fl) return makeConquestQuizFallback(prefCode);
-    const correct = fl;
-    const otherFls = Object.entries(PREF_FLOWERS)
+  if (type === "place" || type === "city") {
+    const table = type === "place" ? FAMOUS_PLACES : FAMOUS_CITIES;
+    const correct = table[prefCode];
+    if (!correct) return makeConquestQuizFallback(prefCode);
+    const others = Object.entries(table)
       .filter(([code, v]) => parseInt(code) !== prefCode && v !== correct)
       .map(([_, v]) => v);
-    const uniqWrongs = [...new Set(otherFls)];
+    const uniqWrongs = [...new Set(others)];
     const shuffledWrongs = uniqWrongs.sort(() => Math.random() - 0.5).slice(0, 3);
     const choices = [correct, ...shuffledWrongs].sort(() => Math.random() - 0.5);
     return {
-      question: `${target.name} の 県の花は？`,
+      question: type === "place"
+        ? `${target.name} に ある 有名な 建物・遺跡は どれ？`
+        : `${target.name} に ある 市町村は どれ？`,
       correctAnswer: correct,
       choices: choices,
+      showKana: true,
     };
   }
 }
@@ -9000,7 +9965,14 @@ function renderConquestQuiz() {
   c.currentQuiz.choices.forEach(ans => {
     const btn = document.createElement("button");
     btn.className = "conquest-choice";
+    btn.dataset.answer = ans;
     btn.textContent = ans;
+    if (c.currentQuiz.showKana && CONQUEST_READINGS[ans]) {
+      const k = document.createElement("span");
+      k.className = "kana";
+      k.textContent = CONQUEST_READINGS[ans];
+      btn.appendChild(k);
+    }
     btn.addEventListener("click", () => onConquestChoiceClick(ans, btn));
     choicesWrap.appendChild(btn);
   });
@@ -9023,15 +9995,21 @@ function onConquestChoiceClick(answer, btnEl) {
     document.getElementById("conquest-quiz-feedback").className = "conquest-feedback ok";
     // 県を取得
     setTimeout(() => {
-      takeConquestPref(c.currentPlayer, c.attackingCode);
-      // 次のターン
-      setTimeout(() => nextConquestTurn(), 1000);
+      const bonusMsgs = takeConquestPref(c.currentPlayer, c.attackingCode);
+      if (bonusMsgs.length > 0) {
+        const fb = document.getElementById("conquest-quiz-feedback");
+        fb.innerHTML = "せいかい！県を とった！" +
+          bonusMsgs.map(m => `<span class="conquest-bonus-pop">${m}</span>`).join("");
+        showConfetti();
+      }
+      // 次のターン（ボーナスがあったときは少し長めに表示）
+      setTimeout(() => nextConquestTurn(), bonusMsgs.length > 0 ? 2600 : 1000);
     }, 800);
   } else {
     btnEl.classList.add("wrong");
     // 正解を表示
     document.querySelectorAll(".conquest-choice").forEach(b => {
-      if (b.textContent === c.currentQuiz.correctAnswer) b.classList.add("show-answer");
+      if (b.dataset.answer === c.currentQuiz.correctAnswer) b.classList.add("show-answer");
     });
     document.getElementById("conquest-quiz-feedback").textContent =
       `ざんねん！正解は「${c.currentQuiz.correctAnswer}」 → 交代！`;
@@ -9040,11 +10018,28 @@ function onConquestChoiceClick(answer, btnEl) {
   }
 }
 
-// 県を取る
+// 県を取る（ボーナスがあれば、そのメッセージの配列を返す）
 function takeConquestPref(player, code) {
   const c = state.conquest;
   if (player === 1) c.p1Territories.push(code);
   else c.p2Territories.push(code);
+  const bonusMsgs = [];
+  // お宝
+  if (c.treasures.includes(code) && !c.foundTreasures.includes(code)) {
+    c.foundTreasures.push(code);
+    addConquestBonus(player, 5);
+    bonusMsgs.push("💎 お宝 はっけん！ ＋5点");
+  }
+  // 地方制覇
+  const region = prefByCode[code].region;
+  const regionCodes = getRegionCodes(region);
+  const mine = getTerritories(player);
+  if (regionCodes.every(rc => mine.includes(rc)) &&
+      !c.completedRegions.some(r => r.region === region)) {
+    c.completedRegions.push({ region, player });
+    addConquestBonus(player, 10);
+    bonusMsgs.push(`🎉 ${region}地方を ぜんぶ とった！ ＋10点`);
+  }
   // 効果音
   playSound("conquest");
   // 演出
@@ -9056,6 +10051,8 @@ function takeConquestPref(player, code) {
   }
   renderConquestStatus();
   renderConquestMap();
+  renderConquestTreasures();
+  return bonusMsgs;
 }
 
 // 次のターンへ
@@ -9064,24 +10061,18 @@ function nextConquestTurn() {
   c.locked = false;
   c.attackingCode = null;
   c.currentQuiz = null;
-  // 終了判定
-  const p1Cands = getConquestCandidates(1);
-  const p2Cands = getConquestCandidates(2);
-  if (p1Cands.length === 0 && p2Cands.length === 0) {
+  // 終了判定（すべての県が取られたら終わり）
+  if (getConquestCandidates(1).length === 0) {
     endConquest();
     return;
   }
   // ターン交代
   c.currentPlayer = (c.currentPlayer === 1) ? 2 : 1;
-  // 交代先に候補がなければさらに交代
-  if (getConquestCandidates(c.currentPlayer).length === 0) {
-    c.currentPlayer = (c.currentPlayer === 1) ? 2 : 1;
-  }
   c.phase = "select";
   renderConquestStatus();
   renderConquestSelectStage();
   renderConquestMap();
-  setConquestFeedback("黄色の県を タップして 攻めよう！", "info");
+  setConquestFeedback("すきな県を タップして 攻めよう！", "info");
 
   // CPUのターンなら自動で動かす
   if (c.mode === "cpu" && c.currentPlayer === 2) {
@@ -9098,15 +10089,10 @@ function handleConquestClick(p) {
   // クイズ中の地図クリックは無視
   if (c.phase !== "select") return;
 
-  const candidates = getConquestCandidates(c.currentPlayer);
   const taken = getAllTaken();
 
   if (taken.includes(p.code)) {
     setConquestFeedback("もう とられている県だよ", "ng");
-    return;
-  }
-  if (!candidates.includes(p.code)) {
-    setConquestFeedback("となりの 黄色の県しか 攻められないよ！", "ng");
     return;
   }
 
@@ -9121,29 +10107,23 @@ function handleConquestClick(p) {
 
 // === CPU処理 ===
 
-// CPUが攻める県を選ぶ（戦略的に）
+// CPUが攻める県を選ぶ（地方制覇をねらう／相手の地方制覇をじゃまする）
+// ※お宝の場所はCPUも知らない
 function chooseCpuAttackTarget() {
   const cands = getConquestCandidates(2);
   if (cands.length === 0) return null;
+  const c = state.conquest;
 
-  // 各候補をシミュレーション
   const scored = cands.map(code => {
-    const fakeP2 = [...state.conquest.p2Territories, code];
-    const taken = [...state.conquest.p1Territories, ...fakeP2];
-
-    let p2Next = new Set();
-    for (const c2 of fakeP2) {
-      for (const n of (PREF_ADJACENCY[c2] || [])) {
-        if (!taken.includes(n)) p2Next.add(n);
-      }
-    }
-    let p1Next = new Set();
-    for (const c1 of state.conquest.p1Territories) {
-      for (const n of (PREF_ADJACENCY[c1] || [])) {
-        if (!taken.includes(n)) p1Next.add(n);
-      }
-    }
-    const score = p2Next.size - p1Next.size + Math.random() * 2;
+    const region = prefByCode[code].region;
+    const codes = getRegionCodes(region);
+    const mineCnt = codes.filter(rc => c.p2Territories.includes(rc)).length;
+    const oppCnt = codes.filter(rc => c.p1Territories.includes(rc)).length;
+    let score = Math.random() * 2;
+    // 自分がまだ制覇できる地方なら、取っている割合が高いほど優先
+    if (oppCnt === 0) score += (mineCnt + 1) / codes.length * 4;
+    // 相手が制覇しそうな地方は、じゃまするために優先
+    if (mineCnt === 0 && oppCnt > 0) score += oppCnt / codes.length * 4;
     return { code, score };
   });
   scored.sort((a, b) => b.score - a.score);
@@ -9185,17 +10165,17 @@ function scheduleCpuMove() {
       const choiceButtons = Array.from(document.querySelectorAll(".conquest-choice"));
       let pickEl;
       if (willCorrect) {
-        pickEl = choiceButtons.find(b => b.textContent === c.currentQuiz.correctAnswer);
+        pickEl = choiceButtons.find(b => b.dataset.answer === c.currentQuiz.correctAnswer);
       } else {
         // ハズレを選ぶ
-        const wrongs = choiceButtons.filter(b => b.textContent !== c.currentQuiz.correctAnswer);
+        const wrongs = choiceButtons.filter(b => b.dataset.answer !== c.currentQuiz.correctAnswer);
         pickEl = wrongs[Math.floor(Math.random() * wrongs.length)];
       }
       if (!pickEl) return;
       // 一旦disabledを外して、CPUが選ぶ風に
       choiceButtons.forEach(b => b.classList.remove("disabled"));
       c.locked = false;
-      onConquestChoiceClick(pickEl.textContent, pickEl);
+      onConquestChoiceClick(pickEl.dataset.answer, pickEl);
     }, 1500);
   }, 1000 + Math.random() * 700);
 }
@@ -9240,11 +10220,22 @@ function startConquest(mode) {
   c.currentQuiz = null;
   c.locked = false;
   c.phase = "select";
+  c.p1Bonus = 0;
+  c.p2Bonus = 0;
+  c.foundTreasures = [];
+  c.completedRegions = [];
 
   // 初期スタート県をランダムに配置
   const { p1Start, p2Start } = pickInitialPositions();
   c.p1Territories.push(p1Start);
   c.p2Territories.push(p2Start);
+
+  // お宝を3つ、スタート県以外にランダムにかくす
+  const treasurePool = PREFECTURES.map(p => p.code)
+    .filter(code => code !== p1Start && code !== p2Start)
+    .sort(() => Math.random() - 0.5);
+  c.treasures = treasurePool.slice(0, 3);
+  renderConquestTreasures();
 
   document.getElementById("conquest-setup").classList.add("hidden");
   document.getElementById("conquest-result").classList.add("hidden");
@@ -9266,8 +10257,8 @@ function endConquest() {
   document.getElementById("conquest-active").classList.add("hidden");
   document.getElementById("conquest-result").classList.remove("hidden");
 
-  const p1 = c.p1Territories.length;
-  const p2 = c.p2Territories.length;
+  const p1 = getConquestScore(1);
+  const p2 = getConquestScore(2);
   const title = document.getElementById("conquest-result-title");
   const detail = document.getElementById("conquest-result-detail");
   title.classList.remove("win-p1","win-p2","draw");
@@ -9277,18 +10268,18 @@ function endConquest() {
   if (p1 > p2) {
     title.textContent = "🏆 " + CONQUEST_LABELS.P1 + " の しょうり！";
     title.classList.add("win-p1");
-    detail.textContent = `${p1} 対 ${p2} で 勝ちました！`;
+    detail.textContent = `${p1}点 対 ${p2}点 で 勝ちました！`;
     outcome = "p1win";
   } else if (p2 > p1) {
     const winner = c.mode === "cpu" ? CONQUEST_LABELS.P2_CPU : CONQUEST_LABELS.P2_VS;
     title.textContent = "🏆 " + winner + " の しょうり！";
     title.classList.add("win-p2");
-    detail.textContent = `${p2} 対 ${p1} で 勝ちました！`;
+    detail.textContent = `${p2}点 対 ${p1}点 で 勝ちました！`;
     outcome = "p2win";
   } else {
     title.textContent = "🤝 ひきわけ";
     title.classList.add("draw");
-    detail.textContent = `${p1} 対 ${p2} で 同点！`;
+    detail.textContent = `${p1}点 対 ${p2}点 で 同点！`;
     outcome = "draw";
   }
   document.getElementById("conquest-result-p1-name").textContent = CONQUEST_LABELS.P1;
@@ -9296,9 +10287,13 @@ function endConquest() {
     c.mode === "cpu" ? CONQUEST_LABELS.P2_CPU : CONQUEST_LABELS.P2_VS;
   document.getElementById("conquest-result-p1-score").textContent = p1;
   document.getElementById("conquest-result-p2-score").textContent = p2;
+  document.getElementById("conquest-result-p1-detail").textContent =
+    `点（${c.p1Territories.length}県 ＋ ボーナス${c.p1Bonus}）`;
+  document.getElementById("conquest-result-p2-detail").textContent =
+    `点（${c.p2Territories.length}県 ＋ ボーナス${c.p2Bonus}）`;
 
-  // 戦績を保存
-  saveConquestRecord(c.mode, outcome, p1, p2);
+  // 戦績を保存（自己ベストは今まで通り「取得県数」で記録）
+  saveConquestRecord(c.mode, outcome, c.p1Territories.length, c.p2Territories.length);
 
   // 結果画面の下に最新の戦績サマリーを表示
   renderConquestRecordsInResult(c.mode);
@@ -9386,6 +10381,7 @@ function quitConquest() {
 function resetConquestUIToSetup() {
   state.conquest.active = false;
   state.conquest.locked = false;
+  clearConquestTreasures();
   document.getElementById("conquest-setup").classList.remove("hidden");
   document.getElementById("conquest-active").classList.add("hidden");
   document.getElementById("conquest-result").classList.add("hidden");
@@ -9410,6 +10406,779 @@ document.getElementById("conquest-tomode-btn").addEventListener("click", () => {
                         "conquest-just-taken-p1","conquest-just-taken-p2","conquest-wrong");
   });
 });
+
+// ==========================================================================
+// === 🎴 しんけいすいじゃく =================================================
+// ==========================================================================
+const MEMORY_KIND_INFO = {
+  capital:   { label: "県庁所在地", tag: "県庁所在地" },
+  specialty: { label: "特産品",     tag: "特産品" },
+  shape:     { label: "県の形",     tag: "県の形" },
+};
+const memory = {
+  kind: "capital",
+  pairs: 6,
+  players: 1,
+  active: false,
+  cards: [],        // {code, type:"name"|"partner", el, matched}
+  open: [],         // めくっているカードの番号
+  locked: false,
+  matched: 0,
+  moves: 0,
+  startedAt: 0,
+  elapsed: 0,
+  timerId: null,
+  current: 1,
+  scores: { 1: 0, 2: 0 },
+};
+
+function getMemoryBest() {
+  try { return JSON.parse(localStorage.getItem("memoryBest") || "{}"); } catch (e) { return {}; }
+}
+
+function memoryShuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// 出題する県をえらぶ（特産品は同じ名前がかぶらないようにする）
+function memoryPickPrefs(kind, n) {
+  const codes = memoryShuffle(PREFECTURES.map(p => p.code));
+  const picked = [];
+  const usedText = new Set();
+  for (const c of codes) {
+    if (picked.length >= n) break;
+    if (kind === "specialty") {
+      const s = SPECIALTIES[c];
+      if (!s || usedText.has(s)) continue;
+      usedText.add(s);
+    }
+    picked.push(c);
+  }
+  return picked;
+}
+
+// 県の形のSVGをつくる（カード用）
+function makeMemoryShapeSvg(code) {
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  const src = mapEl.querySelector(`.prefecture[data-code="${code}"]`);
+  if (!src) return svg;
+  const clone = src.cloneNode(true);
+  clone.removeAttribute("class");
+  clone.querySelectorAll("title").forEach(t => t.remove());
+  let tx = 0, ty = 0;
+  const m = (clone.getAttribute("transform") || "").match(/translate\(\s*([\d.\-]+)\s*[,\s]\s*([\d.\-]+)\s*\)/);
+  if (m) { tx = parseFloat(m[1]); ty = parseFloat(m[2]); }
+  // 沖縄は地図上で位置をずらしていることがあるので元の位置にもどす
+  if (code === 47) {
+    clone.setAttribute("transform", OKINAWA_ORIGINAL_TRANSFORM);
+    const m2 = OKINAWA_ORIGINAL_TRANSFORM.match(/translate\(\s*([\d.\-]+)\s*[,\s]\s*([\d.\-]+)\s*\)/);
+    if (m2) { tx = parseFloat(m2[1]); ty = parseFloat(m2[2]); }
+  }
+  const polys = [];
+  clone.querySelectorAll("polygon, path").forEach(el => {
+    const raw = el.tagName.toLowerCase() === "polygon" ? (el.getAttribute("points") || "") : (el.getAttribute("d") || "");
+    const nums = raw.match(/-?\d*\.?\d+/g);
+    if (!nums) return;
+    const pts = [];
+    for (let i = 0; i < nums.length - 1; i += 2) pts.push([parseFloat(nums[i]), parseFloat(nums[i + 1])]);
+    if (pts.length < 2) return;
+    let a = 0;
+    for (let i = 0; i < pts.length; i++) {
+      const [x0, y0] = pts[i];
+      const [x1, y1] = pts[(i + 1) % pts.length];
+      a += x0 * y1 - x1 * y0;
+    }
+    polys.push({ pts, area: Math.abs(a / 2) });
+  });
+  if (!polys.length) return svg;
+  // 離島が多い県は、いちばん大きい島だけで大きさを決める（形当てクイズと同じ）
+  let used = polys;
+  if ([42, 46, 47].includes(code)) {
+    used = polys.slice().sort((a, b) => b.area - a.area).slice(0, 1);
+  }
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  used.forEach(({ pts }) => pts.forEach(([x, y]) => {
+    const wx = x + tx, wy = y + ty;
+    if (wx < minX) minX = wx; if (wx > maxX) maxX = wx;
+    if (wy < minY) minY = wy; if (wy > maxY) maxY = wy;
+  }));
+  const size = Math.max(maxX - minX, maxY - minY) * 1.15;
+  const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+  svg.setAttribute("viewBox", `${cx - size / 2} ${cy - size / 2} ${size} ${size}`);
+  svg.appendChild(clone);
+  return svg;
+}
+
+function updateMemoryBestDisplay() {
+  const el = document.getElementById("memory-best");
+  const best = getMemoryBest()[memory.kind + "-" + memory.pairs];
+  el.textContent = best
+    ? `🏆 1人プレイの ベスト（${MEMORY_KIND_INFO[memory.kind].label}・${memory.pairs * 2}まい）：${formatTimeMS(best.time)}（${best.moves}回）`
+    : `（${MEMORY_KIND_INFO[memory.kind].label}・${memory.pairs * 2}まい の 記録は まだ ないよ）`;
+}
+
+function setMemoryMsg(text, type) {
+  const el = document.getElementById("memory-msg");
+  el.textContent = text;
+  el.className = "memory-msg" + (type ? " " + type : "");
+  void el.offsetWidth;
+  el.classList.add("pop");
+}
+
+function stopMemoryTimer() {
+  if (memory.timerId) clearInterval(memory.timerId);
+  memory.timerId = null;
+}
+
+function startMemory(players) {
+  stopMemoryTimer();
+  memory.players = players;
+  memory.active = true;
+  memory.open = [];
+  memory.locked = false;
+  memory.matched = 0;
+  memory.moves = 0;
+  memory.startedAt = 0;
+  memory.elapsed = 0;
+  memory.current = 1;
+  memory.scores = { 1: 0, 2: 0 };
+
+  const codes = memoryPickPrefs(memory.kind, memory.pairs);
+  const list = [];
+  codes.forEach(c => {
+    list.push({ code: c, type: "name" });
+    list.push({ code: c, type: "partner" });
+  });
+  memory.cards = memoryShuffle(list).map(c => Object.assign(c, { matched: false, el: null }));
+
+  const grid = document.getElementById("memory-grid");
+  grid.innerHTML = "";
+  grid.style.setProperty("--cols", memory.pairs);
+  grid.style.setProperty("--cols-sm", memory.pairs === 10 ? 5 : 4);
+  memory.cards.forEach((card, idx) => {
+    const p = prefByCode[card.code];
+    const btn = document.createElement("button");
+    btn.className = "memory-card";
+    const inner = document.createElement("span");
+    inner.className = "memory-inner";
+    const back = document.createElement("span");
+    back.className = "memory-face memory-back";
+    back.innerHTML = "<span>🗾</span>";
+    const front = document.createElement("span");
+    front.className = "memory-face memory-front " + card.type;
+    const tag = document.createElement("span");
+    tag.className = "mc-tag";
+    front.appendChild(tag);
+    if (card.type === "name") {
+      tag.textContent = "県名";
+      front.insertAdjacentHTML("beforeend", `<span class="mc-kana">${p.kana}</span><span class="mc-main">${p.name}</span>`);
+    } else {
+      tag.textContent = MEMORY_KIND_INFO[memory.kind].tag;
+      if (memory.kind === "capital") {
+        const cap = CAPITALS[card.code];
+        const longCls = cap.city.length >= 5 ? " long" : "";
+        front.insertAdjacentHTML("beforeend", `<span class="mc-kana">${cap.kana}</span><span class="mc-main${longCls}">${cap.city}</span>`);
+      } else if (memory.kind === "specialty") {
+        const s = SPECIALTIES[card.code];
+        const longCls = s.length >= 7 ? " xlong" : (s.length >= 5 ? " long" : "");
+        front.insertAdjacentHTML("beforeend", `<span class="mc-main${longCls}">${s}</span>`);
+      } else {
+        front.appendChild(makeMemoryShapeSvg(card.code));
+      }
+    }
+    inner.appendChild(back);
+    inner.appendChild(front);
+    btn.appendChild(inner);
+    btn.addEventListener("click", () => onMemoryCardClick(idx));
+    card.el = btn;
+    grid.appendChild(btn);
+  });
+
+  // 上の表示
+  const solo = players === 1;
+  document.getElementById("memory-time-box").classList.toggle("hidden", !solo);
+  document.getElementById("memory-moves-box").classList.toggle("hidden", !solo);
+  document.getElementById("memory-p1-box").classList.toggle("hidden", solo);
+  document.getElementById("memory-p2-box").classList.toggle("hidden", solo);
+  document.getElementById("memory-time").textContent = "00:00";
+  updateMemoryStatus();
+
+  document.getElementById("memory-start").classList.add("hidden");
+  document.getElementById("memory-game").classList.remove("hidden");
+  document.getElementById("memory-result").classList.remove("show");
+  setMemoryMsg(solo ? "すきな カードを めくってね（めくると タイムが スタート）" : "🔴 赤の ばん。カードを 2まい めくってね", "");
+}
+
+function updateMemoryStatus() {
+  document.getElementById("memory-moves").textContent = memory.moves;
+  document.getElementById("memory-p1-score").textContent = memory.scores[1];
+  document.getElementById("memory-p2-score").textContent = memory.scores[2];
+  const p1 = document.getElementById("memory-p1-box");
+  const p2 = document.getElementById("memory-p2-box");
+  p1.classList.toggle("turn", memory.current === 1);
+  p1.classList.toggle("wait", memory.current !== 1);
+  p2.classList.toggle("turn", memory.current === 2);
+  p2.classList.toggle("wait", memory.current !== 2);
+}
+
+function memoryPlayerLabel(n) { return n === 1 ? "🔴 赤" : "🔵 青"; }
+
+function onMemoryCardClick(idx) {
+  if (!memory.active || memory.locked) return;
+  const card = memory.cards[idx];
+  if (card.matched || memory.open.includes(idx)) return;
+
+  // 1人プレイは 最初にめくった時に タイムスタート
+  if (memory.players === 1 && !memory.timerId) {
+    memory.startedAt = Date.now() - memory.elapsed;
+    memory.timerId = setInterval(() => {
+      memory.elapsed = Date.now() - memory.startedAt;
+      document.getElementById("memory-time").textContent = formatTimeMS(memory.elapsed);
+    }, 250);
+  }
+
+  card.el.classList.add("flipped");
+  memory.open.push(idx);
+  if (memory.open.length < 2) return;
+
+  memory.moves++;
+  const [a, b] = memory.open.map(i => memory.cards[i]);
+  if (a.code === b.code && a.type !== b.type) {
+    // ペア！
+    const p = prefByCode[a.code];
+    [a, b].forEach(c => {
+      c.matched = true;
+      c.el.classList.add("matched", "just-matched");
+      if (memory.players === 2) c.el.classList.add("by-p" + memory.current);
+    });
+    memory.open = [];
+    memory.matched++;
+    if (memory.players === 2) memory.scores[memory.current]++;
+    playSound("correct");
+    let text;
+    if (memory.kind === "capital") text = `⭕ ${p.name}の 県庁所在地は ${CAPITALS[a.code].city}！`;
+    else if (memory.kind === "specialty") text = `⭕ ${p.name}の 特産品は ${SPECIALTIES[a.code]}！`;
+    else text = `⭕ これが ${p.name}の 形だよ！`;
+    if (memory.players === 2 && memory.matched < memory.pairs) text += `　${memoryPlayerLabel(memory.current)}は もう一度！`;
+    setMemoryMsg(text, "good");
+    updateMemoryStatus();
+    if (memory.matched >= memory.pairs) {
+      memory.locked = true;
+      setTimeout(finishMemory, 900);
+    }
+  } else {
+    // ざんねん
+    memory.locked = true;
+    updateMemoryStatus();
+    const next = memory.players === 2 ? (memory.current === 1 ? 2 : 1) : 1;
+    setMemoryMsg(memory.players === 2 ? `ざんねん！ つぎは ${memoryPlayerLabel(next)}の ばん` : "ざんねん！ ペアじゃないよ", "bad");
+    setTimeout(() => {
+      if (!memory.active) return;
+      memory.open.forEach(i => memory.cards[i].el.classList.remove("flipped"));
+      memory.open = [];
+      memory.locked = false;
+      if (memory.players === 2) {
+        memory.current = next;
+        updateMemoryStatus();
+      }
+    }, 1200);
+  }
+}
+
+function finishMemory() {
+  if (!memory.active) return;
+  stopMemoryTimer();
+  memory.active = false;
+  const title = document.getElementById("memory-result-title");
+  const stat = document.getElementById("memory-result-stat");
+  const rec = document.getElementById("memory-result-rec");
+  rec.textContent = "";
+  if (memory.players === 1) {
+    memory.elapsed = Date.now() - memory.startedAt;
+    document.getElementById("memory-time").textContent = formatTimeMS(memory.elapsed);
+    title.textContent = "🎉 ぜんぶ そろった！";
+    stat.innerHTML = `タイム：${formatTimeMS(memory.elapsed)}<br>めくった回数：${memory.moves}回`;
+    const key = memory.kind + "-" + memory.pairs;
+    const bests = getMemoryBest();
+    const old = bests[key];
+    if (!old || memory.elapsed < old.time) {
+      bests[key] = { time: memory.elapsed, moves: memory.moves };
+      try { localStorage.setItem("memoryBest", JSON.stringify(bests)); } catch (e) {}
+      rec.textContent = old ? "🏆 新記録！" : "🏆 はじめての 記録！";
+    } else {
+      rec.textContent = `ベスト：${formatTimeMS(old.time)}（${old.moves}回）`;
+    }
+  } else {
+    const s1 = memory.scores[1], s2 = memory.scores[2];
+    if (s1 === s2) title.textContent = "🤝 引き分け！";
+    else title.textContent = `🏆 ${memoryPlayerLabel(s1 > s2 ? 1 : 2)}の 勝ち！`;
+    stat.innerHTML = `🔴 赤 ${s1}ペア　―　🔵 青 ${s2}ペア`;
+  }
+  playSound("correct");
+  showConfetti();
+  document.getElementById("memory-result").classList.add("show");
+}
+
+function resetMemoryToStart() {
+  stopMemoryTimer();
+  memory.active = false;
+  memory.locked = false;
+  document.getElementById("memory-start").classList.remove("hidden");
+  document.getElementById("memory-game").classList.add("hidden");
+  document.getElementById("memory-result").classList.remove("show");
+  updateMemoryBestDisplay();
+}
+
+// === イベント登録 ===
+document.querySelectorAll("#memory-kind-opts .memory-opt").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("#memory-kind-opts .memory-opt").forEach(b => b.classList.toggle("active", b === btn));
+    memory.kind = btn.dataset.kind;
+    updateMemoryBestDisplay();
+  });
+});
+document.querySelectorAll("#memory-pairs-opts .memory-opt").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("#memory-pairs-opts .memory-opt").forEach(b => b.classList.toggle("active", b === btn));
+    memory.pairs = parseInt(btn.dataset.pairs);
+    updateMemoryBestDisplay();
+  });
+});
+document.getElementById("memory-solo-btn").addEventListener("click", () => startMemory(1));
+document.getElementById("memory-versus-btn").addEventListener("click", () => startMemory(2));
+document.getElementById("memory-again-btn").addEventListener("click", () => startMemory(memory.players));
+document.getElementById("memory-back-btn").addEventListener("click", resetMemoryToStart);
+document.getElementById("memory-quit-btn").addEventListener("click", () => {
+  if (!confirm("やめますか？")) return;
+  resetMemoryToStart();
+});
+updateMemoryBestDisplay();
+window.memoryReady = true;
+
+
+// ==========================================================================
+// === 🗺️ ルートさがし ======================================================
+// ==========================================================================
+const ROUTE_LEVELS = {
+  easy:   { label: "かんたん",   min: 2, max: 3,  hint: true },
+  normal: { label: "ふつう",     min: 4, max: 6,  hint: false },
+  hard:   { label: "むずかしい", min: 7, max: 99, hint: false },
+};
+const ROUTE_TOTAL = 5;            // 1ゲームの問題数
+const ROUTE_LABEL_DX = 22;        // 県名ラベルと同じ位置あわせ
+const route = {
+  level: null,
+  active: false,
+  qIndex: 0,
+  totalStars: 0,
+  start: null,
+  goal: null,
+  path: [],
+  done: false,
+  best: [],
+  bestCount: 0,
+  shortest: 0,
+  usedPairs: [],
+  viewSize: 1000,
+};
+
+function routeShort(code) { return getShortName(prefByCode[code].name); }
+
+// となりの県（沖縄は使わない）
+function routeNeighbors(code) {
+  if (code === 47) return [];
+  return (PREF_ADJACENCY[code] || []).filter(c => c !== 47);
+}
+
+// 出発県からのきょり（いちばん少ない回数）と、その道の数
+function routeBfs(from) {
+  const dist = { [from]: 0 };
+  const count = { [from]: 1 };
+  const prev = { [from]: [] };
+  const queue = [from];
+  while (queue.length) {
+    const cur = queue.shift();
+    routeNeighbors(cur).forEach(n => {
+      if (dist[n] === undefined) {
+        dist[n] = dist[cur] + 1;
+        count[n] = count[cur];
+        prev[n] = [cur];
+        queue.push(n);
+      } else if (dist[n] === dist[cur] + 1) {
+        count[n] += count[cur];
+        prev[n].push(cur);
+      }
+    });
+  }
+  return { dist, count, prev };
+}
+
+function routeMakeQuestion() {
+  const lv = ROUTE_LEVELS[route.level];
+  for (let tries = 0; tries < 1000; tries++) {
+    const s = 1 + Math.floor(Math.random() * 46);
+    const r = routeBfs(s);
+    const cands = Object.keys(r.dist).map(Number).filter(c => r.dist[c] >= lv.min && r.dist[c] <= lv.max);
+    if (!cands.length) continue;
+    const g = cands[Math.floor(Math.random() * cands.length)];
+    const key = Math.min(s, g) + "-" + Math.max(s, g);
+    if (route.usedPairs.includes(key) && tries < 900) continue;
+    route.usedPairs.push(key);
+    return { start: s, goal: g, bfs: r };
+  }
+  return null;
+}
+
+// 地図の上の点（県名ラベルと同じ座標系）
+function routePt(code) {
+  const p = prefByCode[code];
+  return [p.cx + ROUTE_LABEL_DX, p.cy];
+}
+// viewBox用の座標（地図全体の座標系）
+function routeRootPt(code) {
+  const [x, y] = routePt(code);
+  return [1.028807 * (x + 6) - 47.544239, 1.028807 * (y + 18) - 28.806583];
+}
+
+// 出発〜ゴールのまわりを大きく表示する
+function routeFocusView() {
+  const pts = route.best.map(routeRootPt);
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  pts.forEach(([x, y]) => {
+    if (x < minX) minX = x; if (x > maxX) maxX = x;
+    if (y < minY) minY = y; if (y > maxY) maxY = y;
+  });
+  const span = Math.max(maxX - minX, maxY - minY);
+  let size = Math.max(320, span * 1.6 + 120);
+  size = Math.min(size, 1000);
+  const cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+  route.viewSize = size;
+  setViewBox([cx - size / 2, cy - size / 2, size, size]);
+  // 県名ラベルと線のレイヤーも地図に合わせて拡大する
+  app.style.setProperty("--route-label-size", (size / 1000 * 16).toFixed(2) + "px");
+  app.style.setProperty("--route-label-stroke", (size / 1000 * 3).toFixed(2) + "px");
+  routeSyncLayers(700);
+}
+
+// 地図の拡大に、県名ラベル・線のレイヤーをついていかせる
+let routeSyncId = null;
+function routeSyncLayers(ms) {
+  const lab = document.getElementById("label-layer");
+  const pop = document.getElementById("popup-layer");
+  const t0 = performance.now();
+  if (routeSyncId) cancelAnimationFrame(routeSyncId);
+  (function step() {
+    const vb = mapEl.getAttribute("viewBox");
+    lab.setAttribute("viewBox", vb);
+    pop.setAttribute("viewBox", vb);
+    routeSyncId = (performance.now() - t0 < ms) ? requestAnimationFrame(step) : null;
+  })();
+}
+function routeResetLayers() {
+  if (routeSyncId) cancelAnimationFrame(routeSyncId);
+  routeSyncId = null;
+  document.getElementById("label-layer").setAttribute("viewBox", "0 0 1000 1000");
+  document.getElementById("popup-layer").setAttribute("viewBox", "0 0 1000 1000");
+  app.style.removeProperty("--route-label-size");
+  app.style.removeProperty("--route-label-stroke");
+}
+
+function setRouteMsg(text, type) {
+  const el = document.getElementById("route-msg");
+  el.textContent = text;
+  el.className = "route-msg" + (type ? " " + type : "");
+  void el.offsetWidth;
+  el.classList.add("pop");
+}
+
+const ROUTE_CLASSES = ["route-start", "route-goal", "route-path", "route-next", "route-short", "route-off", "route-bad"];
+function clearRouteMap() {
+  Object.values(prefElements).forEach(el => el.classList.remove(...ROUTE_CLASSES));
+  const layer = document.getElementById("route-layer");
+  if (layer) layer.remove();
+  routeResetLayers();
+}
+
+function renderRoute() {
+  const NS = "http://www.w3.org/2000/svg";
+  Object.values(prefElements).forEach(el => el.classList.remove(...ROUTE_CLASSES));
+  if (prefElements[47]) prefElements[47].classList.add("route-off");
+  const last = route.path[route.path.length - 1];
+  if (!route.done && ROUTE_LEVELS[route.level].hint) {
+    routeNeighbors(last).forEach(c => {
+      if (!route.path.includes(c)) prefElements[c].classList.add("route-next");
+    });
+  }
+  if (route.done) {
+    route.best.forEach(c => { if (!route.path.includes(c)) prefElements[c].classList.add("route-short"); });
+  }
+  route.path.forEach(c => prefElements[c].classList.add("route-path"));
+  prefElements[route.start].classList.add("route-start");
+  prefElements[route.goal].classList.add("route-goal");
+
+  // 線と旗
+  let layer = document.getElementById("route-layer");
+  if (!layer) {
+    // 地図の中（県名ラベルの下）に線をかく
+    layer = document.createElementNS(NS, "g");
+    layer.setAttribute("id", "route-layer");
+    layer.setAttribute("transform", "matrix(1.028807, 0, 0, 1.028807, -47.544239, -28.806583) translate(6, 18)");
+    layer.style.pointerEvents = "none";
+    mapEl.appendChild(layer);
+  }
+  layer.innerHTML = "";
+  const r = route.viewSize / 120;
+  const drawLine = (codes, cls) => {
+    if (codes.length < 2) return;
+    const pl = document.createElementNS(NS, "polyline");
+    pl.setAttribute("points", codes.map(c => routePt(c).join(",")).join(" "));
+    pl.setAttribute("class", cls);
+    layer.appendChild(pl);
+  };
+  if (route.done) drawLine(route.best, "route-line best");
+  drawLine(route.path, "route-line");
+  route.path.forEach(c => {
+    const [x, y] = routePt(c);
+    const dot = document.createElementNS(NS, "circle");
+    dot.setAttribute("cx", x);
+    dot.setAttribute("cy", y);
+    dot.setAttribute("r", r);
+    dot.setAttribute("class", "route-dot");
+    layer.appendChild(dot);
+  });
+  [[route.start, "🚩"], [route.goal, "🏁"]].forEach(([c, mark]) => {
+    const [x, y] = routePt(c);
+    const t = document.createElementNS(NS, "text");
+    t.setAttribute("x", x);
+    t.setAttribute("y", y - r * 2.2);
+    t.setAttribute("text-anchor", "middle");
+    t.style.fontSize = (r * 5) + "px";
+    t.setAttribute("class", "route-flag");
+    t.textContent = mark;
+    layer.appendChild(t);
+  });
+
+  // パネル
+  document.getElementById("route-moves").textContent = route.path.length - 1;
+  const chips = document.getElementById("route-chips");
+  chips.innerHTML = "";
+  route.path.forEach((c, i) => {
+    if (i > 0) chips.insertAdjacentHTML("beforeend", "<span>→</span>");
+    const s = document.createElement("span");
+    s.className = "route-chip" + (c === route.start ? " start" : (c === route.goal ? " goal" : ""));
+    s.textContent = routeShort(c);
+    chips.appendChild(s);
+  });
+  document.getElementById("route-undo-btn").disabled = route.done || route.path.length <= 1;
+  document.getElementById("route-reset-btn").disabled = route.done || route.path.length <= 1;
+}
+
+function startRoute(level) {
+  route.level = level;
+  route.active = true;
+  route.qIndex = 0;
+  route.totalStars = 0;
+  route.usedPairs = [];
+  document.getElementById("route-setup").classList.add("hidden");
+  document.getElementById("route-result").classList.add("hidden");
+  document.getElementById("route-active").classList.remove("hidden");
+  document.getElementById("route-hint").classList.toggle("hidden", !ROUTE_LEVELS[level].hint);
+  startRouteQuestion();
+}
+
+function startRouteQuestion() {
+  const q = routeMakeQuestion();
+  if (!q) return;
+  route.start = q.start;
+  route.goal = q.goal;
+  route.path = [q.start];
+  route.done = false;
+  route.shortest = q.bfs.dist[q.goal];
+  route.bestCount = q.bfs.count[q.goal];
+  // いちばん近い道を1つつくる（ゴールから さかのぼる）
+  const best = [q.goal];
+  let cur = q.goal;
+  while (cur !== q.start) {
+    const ps = q.bfs.prev[cur];
+    cur = ps[Math.floor(Math.random() * ps.length)];
+    best.unshift(cur);
+  }
+  route.best = best;
+
+  document.getElementById("route-qnum").textContent = `第${route.qIndex + 1}問 / ${ROUTE_TOTAL}`;
+  document.getElementById("route-stars").textContent = route.totalStars;
+  document.getElementById("route-bar").style.width = (route.qIndex / ROUTE_TOTAL * 100) + "%";
+  document.getElementById("route-start-name").textContent = prefByCode[q.start].name;
+  document.getElementById("route-goal-name").textContent = prefByCode[q.goal].name;
+  document.getElementById("route-answer").classList.add("hidden");
+  document.getElementById("route-play-actions").classList.remove("hidden");
+  setRouteMsg(`${prefByCode[q.start].name}の となりの県を タップしよう`, "");
+  routeFocusView();
+  renderRoute();
+}
+
+function handleRouteClick(p) {
+  if (!route.active || route.done) return;
+  const code = p.code;
+  const last = route.path[route.path.length - 1];
+  if (code === 47) {
+    setRouteMsg("沖縄県は 海の むこうなので 使えないよ", "bad");
+    return;
+  }
+  if (route.path.includes(code)) {
+    setRouteMsg(`${p.name}は もう 通ったよ`, "bad");
+    return;
+  }
+  if (!routeNeighbors(last).includes(code)) {
+    playSound("wrong");
+    const el = prefElements[code];
+    el.classList.remove("route-bad");
+    void el.getBoundingClientRect();
+    el.classList.add("route-bad");
+    setTimeout(() => el.classList.remove("route-bad"), 500);
+    setRouteMsg(`${p.name}は ${prefByCode[last].name}の となりじゃないよ`, "bad");
+    return;
+  }
+  route.path.push(code);
+  if (code === route.goal) {
+    finishRouteQuestion(false);
+  } else {
+    setRouteMsg(`${p.name}へ 進んだ！`, "good");
+    renderRoute();
+  }
+}
+
+function finishRouteQuestion(gaveUp) {
+  route.done = true;
+  const moves = route.path.length - 1;
+  let stars = 0;
+  if (!gaveUp) {
+    const diff = moves - route.shortest;
+    stars = diff <= 0 ? 3 : (diff <= 2 ? 2 : 1);
+    playSound("correct");
+  }
+  route.totalStars += stars;
+  document.getElementById("route-stars").textContent = route.totalStars;
+  document.getElementById("route-bar").style.width = ((route.qIndex + 1) / ROUTE_TOTAL * 100) + "%";
+
+  const title = document.getElementById("route-answer-title");
+  const detail = document.getElementById("route-answer-detail");
+  if (gaveUp) {
+    title.textContent = "こたえ";
+    detail.textContent = `いちばん少ない回数は ${route.shortest}回`;
+  } else if (stars === 3) {
+    title.textContent = "🎉 さいたんルート！";
+    detail.textContent = `${moves}回で ゴール！ いちばん 近い道だよ`;
+  } else {
+    title.textContent = "🏁 ゴール！";
+    detail.textContent = `${moves}回で ゴール！（いちばん少ないのは ${route.shortest}回）`;
+  }
+  document.getElementById("route-answer-stars").textContent = "⭐".repeat(stars) + "☆".repeat(3 - stars);
+  const bestText = route.best.map(routeShort).join(" → ");
+  document.getElementById("route-answer-best").textContent =
+    `🔵 いちばん近い道：${bestText}` + (route.bestCount > 1 ? `（同じ回数の 道が ほかにも あるよ）` : "");
+  document.getElementById("route-next-btn").textContent = route.qIndex + 1 < ROUTE_TOTAL ? "つぎの問題 ▶" : "けっかを見る ▶";
+  document.getElementById("route-answer").classList.remove("hidden");
+  document.getElementById("route-play-actions").classList.add("hidden");
+  setRouteMsg("", "");
+  renderRoute();
+}
+
+function finishRoute() {
+  route.active = false;
+  clearRouteMap();
+  setViewBox(REGION_VIEWBOXES["全国"]);
+  const total = route.totalStars;
+  const max = ROUTE_TOTAL * 3;
+  document.getElementById("route-result-title").textContent = `🎉 ${ROUTE_LEVELS[route.level].label} 5問 クリア！`;
+  document.getElementById("route-result-score").textContent = total;
+  document.getElementById("route-result-stars").textContent = "⭐".repeat(Math.round(total / max * 5)) || "☆";
+  let msg;
+  if (total === max) msg = "ぜんぶ さいたんルート！ 日本地図 マスターだね！";
+  else if (total >= 12) msg = "すごい！ となりの県が よく わかっているね！";
+  else if (total >= 8) msg = "いいね！ 地図を よく 見て もう一回 ちょうせんしよう！";
+  else msg = "地図で となりの県を たしかめてから もう一回 やってみよう！";
+  document.getElementById("route-result-msg").textContent = msg;
+  let bests = {};
+  try { bests = JSON.parse(localStorage.getItem("routeBestStars") || "{}"); } catch (e) {}
+  const old = bests[route.level] || 0;
+  const bestEl = document.getElementById("route-result-best");
+  if (total > old) {
+    bests[route.level] = total;
+    try { localStorage.setItem("routeBestStars", JSON.stringify(bests)); } catch (e) {}
+    bestEl.textContent = old ? "🏆 新記録！" : "🏆 はじめての 記録！";
+  } else {
+    bestEl.textContent = `ベスト：⭐${old}`;
+  }
+  document.getElementById("route-active").classList.add("hidden");
+  document.getElementById("route-result").classList.remove("hidden");
+  playSound("correct");
+  showConfetti();
+}
+
+function updateRouteBestDisplay() {
+  let bests = {};
+  try { bests = JSON.parse(localStorage.getItem("routeBestStars") || "{}"); } catch (e) {}
+  ["easy", "normal", "hard"].forEach(lv => {
+    const el = document.getElementById("route-best-" + lv);
+    if (el) el.textContent = bests[lv] ? `🏆 ベスト ⭐${bests[lv]}` : "";
+  });
+}
+
+function resetRouteToSetup() {
+  route.active = false;
+  route.done = false;
+  clearRouteMap();
+  document.getElementById("route-setup").classList.remove("hidden");
+  document.getElementById("route-active").classList.add("hidden");
+  document.getElementById("route-result").classList.add("hidden");
+  updateRouteBestDisplay();
+}
+
+// === イベント登録 ===
+document.querySelectorAll(".route-level-btn").forEach(btn => {
+  btn.addEventListener("click", () => startRoute(btn.dataset.level));
+});
+document.getElementById("route-undo-btn").addEventListener("click", () => {
+  if (route.done || route.path.length <= 1) return;
+  route.path.pop();
+  setRouteMsg("1つ もどったよ", "");
+  renderRoute();
+});
+document.getElementById("route-reset-btn").addEventListener("click", () => {
+  if (route.done) return;
+  route.path = [route.start];
+  setRouteMsg("出発の県に もどったよ", "");
+  renderRoute();
+});
+document.getElementById("route-giveup-btn").addEventListener("click", () => {
+  if (route.done) return;
+  finishRouteQuestion(true);
+});
+document.getElementById("route-next-btn").addEventListener("click", () => {
+  route.qIndex++;
+  if (route.qIndex >= ROUTE_TOTAL) finishRoute();
+  else startRouteQuestion();
+});
+document.getElementById("route-quit-btn").addEventListener("click", () => {
+  if (!confirm("やめますか？")) return;
+  resetRouteToSetup();
+  setViewBox(REGION_VIEWBOXES["全国"]);
+});
+document.getElementById("route-again-btn").addEventListener("click", () => startRoute(route.level || "easy"));
+document.getElementById("route-tolevel-btn").addEventListener("click", resetRouteToSetup);
+document.getElementById("route-labels").addEventListener("change", e => {
+  app.classList.toggle("route-hide-labels", !e.target.checked);
+});
+updateRouteBestDisplay();
+window.routeReady = true;
 
 </script>
 </body>

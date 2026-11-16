@@ -2987,6 +2987,63 @@ header.title .sub {
 
 .hidden { display: none !important; }
 
+/* === パズル：どきどき ききいっぱつ！ === */
+.puzzle-timer.kiki-danger {
+  color: #fff;
+  background: #dc2626;
+  animation: kiki-beat 1s infinite;
+}
+@keyframes kiki-beat {
+  0%, 100% { transform: scale(1); }
+  15% { transform: scale(1.18); }
+  30% { transform: scale(1); }
+}
+.puzzle-stage.kiki-danger { animation: kiki-glow 1s infinite; }
+@keyframes kiki-glow {
+  0%, 100% { box-shadow: inset 0 0 0 0 rgba(220, 38, 38, 0); }
+  15% { box-shadow: inset 0 0 0 6px rgba(220, 38, 38, 0.55); }
+}
+.puzzle-stage.kiki-boom { animation: kiki-shake 0.5s; }
+@keyframes kiki-shake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-8px, 4px); }
+  40% { transform: translate(7px, -5px); }
+  60% { transform: translate(-5px, -3px); }
+  80% { transform: translate(4px, 3px); }
+}
+.puzzle-piece.kiki-flying {
+  transition: left 0.9s cubic-bezier(0.15, 0.85, 0.3, 1.05), top 0.9s cubic-bezier(0.15, 0.85, 0.3, 1.05), transform 0.9s ease-out;
+  z-index: 50;
+}
+.puzzle-stage.kiki-over .puzzle-piece { pointer-events: none; }
+.puzzle-timeup {
+  position: absolute;
+  inset: 0;
+  background: rgba(40, 20, 20, 0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: min(120px, 15%);
+  z-index: 100;
+  border-radius: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+.puzzle-timeup.show { opacity: 1; pointer-events: auto; }
+.puzzle-timeup h2 {
+  font-size: 52px;
+  margin: 0 0 12px;
+  color: #fff;
+  text-shadow: 4px 4px 0 #dc2626;
+}
+.puzzle-timeup p { font-size: 22px; margin: 6px 0; color: #fff; font-weight: bold; text-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
+@media (max-width: 600px) {
+  .puzzle-timeup h2 { font-size: 34px; }
+  .puzzle-timeup p { font-size: 16px; }
+}
+
 /* === しんけいすいじゃく === */
 .app.memory-mode .layout { display: none; }
 #memory-wrap {
@@ -4306,6 +4363,7 @@ header.title .sub {
   <div class="puzzle-mode-tabs">
     <button class="puzzle-tab active" data-puzzle-mode="practice">📖 練習</button>
     <button class="puzzle-tab" data-puzzle-mode="timeattack">⏱ タイムアタック</button>
+    <button class="puzzle-tab" data-puzzle-mode="kiki">💣 どきどき ききいっぱつ！</button>
   </div>
   <div class="puzzle-header">
     <h2 class="puzzle-title">🧩 日本地図パズル</h2>
@@ -4334,6 +4392,11 @@ header.title .sub {
       <p id="puzzle-clear-time"></p>
       <p id="puzzle-clear-best" style="font-weight:800;color:#d97706;display:none">🏆 新記録！</p>
       <button class="puzzle-btn primary" id="puzzle-clear-again-btn" style="margin-top:20px;font-size:18px;padding:12px 24px">もう一回</button>
+    </div>
+    <div class="puzzle-timeup" id="puzzle-timeup">
+      <h2>💥 タイムアップ！</h2>
+      <p id="puzzle-timeup-text">都道府県が ばらばらに なっちゃった…</p>
+      <button class="puzzle-btn primary" id="puzzle-timeup-again-btn" style="margin-top:20px;font-size:18px;padding:12px 24px">もう一回 ちょうせん！</button>
     </div>
   </div>
 </div>
@@ -8237,6 +8300,8 @@ const puzzleState = {
   taTimerId: null,
 };
 
+const PUZZLE_KIKI_TOTAL_MS = 180000;   // どきどき ききいっぱつ！の持ち時間（3分）
+const PUZZLE_KIKI_DANGER_SEC = 20;     // のこり何秒から赤くするか
 const puzzleStage = document.getElementById("puzzle-stage");
 const puzzleTray = document.getElementById("puzzle-tray");
 const puzzleBoardSvg = document.getElementById("puzzle-board-svg");
@@ -8285,6 +8350,7 @@ function initPuzzle() {
   puzzlePlacedGroup.innerHTML = "";
   // 既存ピースを削除
   puzzleTray.querySelectorAll(".puzzle-piece").forEach(el => el.remove());
+  puzzleStage.querySelectorAll(":scope > .puzzle-piece").forEach(el => el.remove());
   puzzleState.pieces = [];
   puzzleState.placedCount = 0;
   puzzleClearEl.classList.remove("show");
@@ -8737,7 +8803,25 @@ function showPuzzleClear() {
   let isNewBest = false;
   let timeStr = "";
 
-  if (puzzleState.mode === "timeattack" && puzzleState.taStarted) {
+  if (puzzleState.mode === "kiki" && puzzleState.taStarted) {
+    // どきどき ききいっぱつ！ 完了：のこり時間を記録
+    const remainMs = Math.max(0, PUZZLE_KIKI_TOTAL_MS - (Date.now() - puzzleState.taStartTime));
+    stopTaTimer();
+    puzzleState.taStarted = false;
+    document.getElementById("puzzle-timer").classList.remove("kiki-danger");
+    document.getElementById("puzzle-timer").textContent = "💣 " + formatTimeMS(Math.ceil(remainMs / 1000) * 1000);
+    puzzleStage.classList.remove("kiki-danger");
+    const isNoBorder = puzzleBoardSvg.classList.contains("no-borders");
+    const key = isNoBorder ? "puzzleKikiBestNoBorder" : "puzzleKikiBestWithBorder";
+    const prev = parseFloat(localStorage.getItem(key) || "0");
+    if (remainMs > prev) {
+      localStorage.setItem(key, String(remainMs));
+      isNewBest = true;
+    }
+    puzzleClearTimeEl.textContent = `のこり ${formatTimeMS(remainMs)} で せいこう！（${isNoBorder ? "県境なし" : "県境あり"}）`;
+    playSound("correct");
+    showConfetti();
+  } else if (puzzleState.mode === "timeattack" && puzzleState.taStarted) {
     // タイムアタック完了：タイマー停止 & 記録判定
     const elapsedMs = Date.now() - puzzleState.taStartTime;
     stopTaTimer();
@@ -8789,7 +8873,7 @@ function updateBorderBtnLabel() {
 }
 puzzleBorderBtn.addEventListener("click", () => {
   // タイムアタック中は変えさせない（記録の公平性のため）
-  if (puzzleState.mode === "timeattack" && puzzleState.taStarted) {
+  if ((puzzleState.mode === "timeattack" || puzzleState.mode === "kiki") && puzzleState.taStarted) {
     alert("タイムアタック中は県境の切替はできません。");
     return;
   }
@@ -8809,6 +8893,7 @@ function resetPuzzle() {
 }
 document.getElementById("puzzle-reset-btn").addEventListener("click", resetPuzzle);
 document.getElementById("puzzle-clear-again-btn").addEventListener("click", resetPuzzle);
+document.getElementById("puzzle-timeup-again-btn").addEventListener("click", resetPuzzle);
 
 // === 練習/タイムアタックのタブ切替 ===
 document.querySelectorAll(".puzzle-tab").forEach(btn => {
@@ -8827,13 +8912,18 @@ document.querySelectorAll(".puzzle-tab").forEach(btn => {
 
 // パズルモード（練習/タイムアタック）に応じたUI切替
 function applyPuzzleMode() {
-  const isTA = puzzleState.mode === "timeattack";
+  const isTA = puzzleState.mode === "timeattack" || puzzleState.mode === "kiki";
   const timerEl = document.getElementById("puzzle-timer");
   const startBtn = document.getElementById("puzzle-ta-start-btn");
 
+  // どきどき ききいっぱつ！の表示をリセット
+  timerEl.classList.remove("kiki-danger");
+  puzzleStage.classList.remove("kiki-danger", "kiki-boom", "kiki-over");
+  document.getElementById("puzzle-timeup").classList.remove("show");
+
   if (isTA) {
     timerEl.style.display = "";
-    timerEl.textContent = "⏱ 00:00";
+    timerEl.textContent = puzzleState.mode === "kiki" ? "💣 " + formatTimeMS(PUZZLE_KIKI_TOTAL_MS) : "⏱ 00:00";
     startBtn.style.display = "";
     startBtn.textContent = "▶ スタート";
     startBtn.disabled = false;
@@ -8850,10 +8940,108 @@ function applyPuzzleMode() {
 document.getElementById("puzzle-ta-start-btn").addEventListener("click", () => {
   puzzleState.taStarted = true;
   puzzleState.taStartTime = Date.now();
-  startTaTimer();
+  if (puzzleState.mode === "kiki") startKikiTimer();
+  else startTaTimer();
   document.getElementById("puzzle-ta-start-btn").style.display = "none";
   puzzleStage.classList.remove("ta-waiting");
 });
+
+// === どきどき ききいっぱつ！（3分カウントダウン） ===
+function startKikiTimer() {
+  stopTaTimer();
+  const timerEl = document.getElementById("puzzle-timer");
+  const tick = () => {
+    if (!puzzleState.taStarted) return;
+    const remain = PUZZLE_KIKI_TOTAL_MS - (Date.now() - puzzleState.taStartTime);
+    // 1秒ずつ減っていくように、切り上げで表示
+    const remainSec = Math.max(0, Math.ceil(remain / 1000));
+    timerEl.textContent = "💣 " + formatTimeMS(remainSec * 1000);
+    const danger = remainSec <= PUZZLE_KIKI_DANGER_SEC;
+    timerEl.classList.toggle("kiki-danger", danger);
+    puzzleStage.classList.toggle("kiki-danger", danger);
+    if (remain <= 0) kikiTimeUp();
+  };
+  tick();
+  puzzleState.taTimerId = setInterval(tick, 100);
+}
+
+// タイムアップ：置いた県が地図の上で はじけるように 散らばる
+function kikiTimeUp() {
+  stopTaTimer();
+  puzzleState.taStarted = false;
+  document.getElementById("puzzle-timer").classList.remove("kiki-danger");
+  puzzleStage.classList.remove("kiki-danger");
+  puzzleStage.classList.add("kiki-over");
+  if (state.mode === "puzzle") playSound("wrong");
+
+  const stageRect = puzzleStage.getBoundingClientRect();
+  const boardRect = document.querySelector(".puzzle-board").getBoundingClientRect();
+  const mapScale = Math.min(boardRect.width, boardRect.height) / 1000;
+  const mapOffsetX = boardRect.left - stageRect.left + (boardRect.width - 1000 * mapScale) / 2;
+  const mapOffsetY = boardRect.top - stageRect.top + (boardRect.height - 1000 * mapScale) / 2;
+  const centerX = mapOffsetX + 500 * mapScale;
+  const centerY = mapOffsetY + 500 * mapScale;
+
+  const flying = [];
+  puzzleState.pieces.forEach(piece => {
+    if (!piece.placed) return;
+    piece.placed = false;
+    // 地図の色付きシルエットを元にもどす
+    puzzleSilhouette.appendChild(piece.silhouetteG);
+    // ピースを、地図上の正しい位置に出す
+    const el = piece.el;
+    const w = piece.bbox.width * mapScale;
+    const h = piece.bbox.height * mapScale;
+    el.style.width = w + "px";
+    el.style.height = h + "px";
+    el.style.left = (mapOffsetX + piece.bbox.x * mapScale) + "px";
+    el.style.top = (mapOffsetY + piece.bbox.y * mapScale) + "px";
+    el.style.transform = "";
+    el.style.pointerEvents = "";
+    el.classList.remove("kiki-flying");
+    puzzleStage.appendChild(el);
+    flying.push({ piece, el, w, h });
+  });
+  puzzlePlacedGroup.innerHTML = "";
+  puzzleState.placedCount = 0;
+  updatePuzzleStatus();
+
+  // つぎのフレームで、外がわへ はじけ飛ばす
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      puzzleStage.classList.add("kiki-boom");
+      flying.forEach(({ el, w, h }) => {
+        const px = parseFloat(el.style.left) + w / 2;
+        const py = parseFloat(el.style.top) + h / 2;
+        let dx = px - centerX, dy = py - centerY;
+        const len = Math.sqrt(dx * dx + dy * dy) || 1;
+        dx /= len; dy /= len;
+        // 外向き＋少しランダムな向き
+        const ang = Math.atan2(dy, dx) + (Math.random() - 0.5) * 1.2;
+        const dist = (160 + Math.random() * 280) * Math.max(0.6, mapScale * 1.4);
+        let nx = px + Math.cos(ang) * dist - w / 2;
+        let ny = py + Math.sin(ang) * dist - h / 2;
+        // ステージの外に出ないように
+        nx = Math.min(Math.max(4, nx), stageRect.width - w - 4);
+        ny = Math.min(Math.max(4, ny), stageRect.height - h - 4);
+        const rot = (Math.random() - 0.5) * 120;
+        el.classList.add("kiki-flying");
+        el.style.left = nx + "px";
+        el.style.top = ny + "px";
+        el.style.transform = `rotate(${rot}deg)`;
+      });
+    });
+  });
+
+  setTimeout(() => {
+    puzzleStage.classList.remove("kiki-boom");
+    const text = flying.length > 0
+      ? `くっつけた ${flying.length}県が ばらばらに なっちゃった…`
+      : "まだ 1県も おけて いなかったよ…";
+    document.getElementById("puzzle-timeup-text").textContent = text;
+    document.getElementById("puzzle-timeup").classList.add("show");
+  }, 1300);
+}
 
 function startTaTimer() {
   stopTaTimer();
@@ -9002,6 +9190,24 @@ function renderRecords() {
     },
   ]));
 
+  // === どきどき ききいっぱつ！ ===
+  const kikiWith = parseFloat(localStorage.getItem("puzzleKikiBestWithBorder") || "0");
+  const kikiNo = parseFloat(localStorage.getItem("puzzleKikiBestNoBorder") || "0");
+  if (kikiWith || kikiNo) anyRecord = true;
+  body.appendChild(buildSection("💣 パズル どきどき ききいっぱつ！（ベスト のこり時間）", [
+    { label: "県境あり", value: kikiWith ? `のこり ${formatTimeMS(kikiWith)}` : null },
+    { label: "県境なし", value: kikiNo ? `のこり ${formatTimeMS(kikiNo)}` : null },
+  ]));
+
+  // === フラッシュカード ===
+  let flashPerfect = [];
+  try { flashPerfect = JSON.parse(localStorage.getItem("flashPerfectStages") || "[]"); } catch (e) {}
+  if (flashPerfect.length) anyRecord = true;
+  body.appendChild(buildSection("🃏 フラッシュカード（1しゅうで パーフェクト）", QUIZ_STAGES.map(st => ({
+    label: st,
+    value: flashPerfect.includes(st) ? "🌟" : null,
+  }))));
+
   // === ⑧ しんけいすいじゃく ===
   const memBest = getMemoryBest();
   if (Object.keys(memBest).length) anyRecord = true;
@@ -9080,6 +9286,9 @@ document.getElementById("records-reset-btn").addEventListener("click", () => {
     "conquestStats",
     "memoryBest",
     "routeBestStars",
+    "puzzleKikiBestWithBorder",
+    "puzzleKikiBestNoBorder",
+    "flashPerfectStages",
     "quizStars",  // 念のため
   ];
   keys.forEach(k => localStorage.removeItem(k));
@@ -9091,6 +9300,7 @@ document.getElementById("records-reset-btn").addEventListener("click", () => {
   state.point.tappedByStage = {};
   state.sugoroku.bestSoloTurns = null;
   state.kanji.bestTime = null;
+  flash.perfect = [];
 
   alert("すべての記録を消去しました。");
   renderRecords();
@@ -9109,6 +9319,9 @@ const flash = {
   checked: new Set(), // 「言えた！」にチェックした県コード
   roundNum: 1,        // 何周目か
   msgTimer: null,
+  perfect: (() => {   // 1周目で全部言えた地方（星をつける）
+    try { return JSON.parse(localStorage.getItem("flashPerfectStages") || "[]"); } catch (e) { return []; }
+  })(),
 };
 
 function shuffleFlash(arr) {
@@ -9127,12 +9340,14 @@ function renderFlashStageList() {
     const btn = document.createElement("button");
     btn.className = "stage-btn";
     const count = PREFECTURES.filter(p => p.region === region).length;
+    if (flash.perfect.includes(region)) btn.classList.add("cleared");
     btn.innerHTML = region + "<br><small>(" + count + ")</small>";
     btn.addEventListener("click", () => startFlash(region));
     list.appendChild(btn);
   });
   const fullBtn = document.createElement("button");
   fullBtn.className = "stage-btn full";
+  if (flash.perfect.includes("全国")) fullBtn.classList.add("cleared");
   fullBtn.innerHTML = "🌏 全国（47県）";
   fullBtn.addEventListener("click", () => startFlash("全国"));
   list.appendChild(fullBtn);
@@ -9252,6 +9467,14 @@ function clearFlash() {
   const name = flash.stage === "全国" ? "全国" : flash.stage + "地方";
   document.getElementById("flash-clear-text").textContent =
     name + "の " + flash.pool.length + "県を、" + flash.roundNum + "しゅうで ぜんぶ 言えました！";
+  // 1周目で全部言えたら星をつける
+  if (flash.roundNum === 1) {
+    document.getElementById("flash-clear-text").textContent += "　🌟 1しゅうで パーフェクト！ ほしが ついたよ！";
+    if (!flash.perfect.includes(flash.stage)) {
+      flash.perfect.push(flash.stage);
+      try { localStorage.setItem("flashPerfectStages", JSON.stringify(flash.perfect)); } catch (e) {}
+    }
+  }
   playSound("correct");
   showConfetti();
 }

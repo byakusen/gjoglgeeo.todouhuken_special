@@ -2987,6 +2987,49 @@ header.title .sub {
 
 .hidden { display: none !important; }
 
+/* === 都道府県チェック === */
+.app.kencheck-mode .label-layer { display: none; }
+.app.kencheck-mode #japan-map .prefecture,
+.app.kencheck-mode #japan-map .prefecture polygon,
+.app.kencheck-mode #japan-map .prefecture path { pointer-events: none; cursor: default; }
+.kencheck-card.is-correct { border-color: #2c9a4a; background: #effaf0; }
+.kencheck-card.is-wrong { border-color: var(--accent); background: #fff1ee; }
+.kencheck-judge { font-size: 20px; font-weight: bold; margin-bottom: 2px; }
+.kencheck-judge.ok { color: #2c9a4a; }
+.kencheck-judge.ng { color: var(--accent); }
+.kencheck-input-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.kencheck-input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 8px 12px;
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  outline: none;
+  transition: box-shadow 0.15s;
+}
+.kencheck-input:focus { box-shadow: 0 0 0 3px #ffd24a; }
+.kencheck-input:disabled { background: #f1ede2; color: #777; }
+.kencheck-input-row .btn-mini { font-size: 18px; padding: 8px 18px; }
+.kencheck-input-row .btn-mini:disabled { opacity: 0.4; cursor: default; }
+.kencheck-yours {
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  min-height: 18px;
+  margin-bottom: 6px;
+}
+.kencheck-nav { grid-template-columns: 1fr 1.4fr; }
+.kencheck-nav .btn-mini:disabled { opacity: 0.4; cursor: default; }
+
 /* === パズル：どきどき ききいっぱつ！ === */
 .puzzle-timer.kiki-danger {
   color: #fff;
@@ -3449,7 +3492,8 @@ header.title .sub {
     <button class="mode-btn active" data-group="oboeru" data-mode="learn">📖 都道府県の説明</button>
     <button class="mode-btn" data-group="oboeru" data-mode="blank">📍 指差し確認</button>
     <button class="mode-btn" data-group="oboeru" data-mode="flash">🃏 フラッシュカード</button>
-    <button class="mode-btn" data-group="oboeru" data-mode="quiz">🎯 クイズモード</button>
+    <button class="mode-btn" data-group="oboeru" data-mode="quiz">🎯 場所チェック</button>
+    <button class="mode-btn" data-group="oboeru" data-mode="kencheck">✏️ 都道府県チェック</button>
     <button class="mode-btn" data-group="hatten" data-mode="shape">🔷 形当てクイズ</button>
     <button class="mode-btn" data-group="hatten" data-mode="locate">📌 場所当てクイズ</button>
     <button class="mode-btn" data-group="hatten" data-mode="kanji">🔍 共通点さがし</button>
@@ -3771,6 +3815,60 @@ header.title .sub {
         </div>
       </div>
 
+      <!-- 都道府県チェック -->
+      <div class="panel hidden" id="kencheck-panel">
+        <h2>✏️ 都道府県チェック</h2>
+
+        <!-- 地方選択画面 -->
+        <div id="kencheck-stage-select">
+          <p style="margin:4px 0 8px;font-size:13px">地方を えらぼう。<br>赤く光った県の 名前を ひらがなで 書いてみよう！</p>
+          <div class="quiz-stage-list" id="kencheck-stage-list"></div>
+          <p style="font-size:12px;color:#777;margin:8px 0 0">正解した県には チェックが つき、もう出てきません。まちがえた県は くりかえし 出てくるよ。</p>
+        </div>
+
+        <!-- 進行中画面 -->
+        <div id="kencheck-active" class="hidden">
+          <div class="flash-stage-name" id="kencheck-stage-name"></div>
+          <div class="quiz-progress">
+            <span class="score">✔ 正解 <span id="kencheck-done-count">0</span></span>
+            <span>のこり <span id="kencheck-remain">0</span></span>
+          </div>
+          <div class="progress-bar"><span id="kencheck-bar"></span></div>
+          <div class="flash-round" id="kencheck-round"></div>
+          <div class="flash-card kencheck-card" id="kencheck-card">
+            <div class="flash-q" id="kencheck-hidden">？</div>
+            <div class="flash-answer hidden" id="kencheck-answer">
+              <div class="kencheck-judge" id="kencheck-judge"></div>
+              <div class="flash-kana" id="kencheck-kana"></div>
+              <div class="flash-name" id="kencheck-name"></div>
+            </div>
+          </div>
+          <div class="kencheck-input-row">
+            <input type="text" id="kencheck-input" class="kencheck-input" placeholder="ひらがなで 書こう" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            <button class="btn-mini primary" id="kencheck-ok">OK</button>
+          </div>
+          <div class="kencheck-yours" id="kencheck-yours"></div>
+          <div class="flash-nav kencheck-nav">
+            <button class="btn-mini" id="kencheck-giveup">わからない</button>
+            <button class="btn-mini primary" id="kencheck-next">つぎ ▶</button>
+          </div>
+          <div class="flash-msg" id="kencheck-msg"></div>
+          <div class="quiz-actions" style="margin-top:8px;justify-content:center">
+            <button class="btn-mini" id="kencheck-back">⬅ 地方をえらびなおす</button>
+          </div>
+        </div>
+
+        <!-- クリア画面 -->
+        <div id="kencheck-clear" class="hidden" style="text-align:center">
+          <div class="flash-clear-title">🎉 ぜんぶ 正解！</div>
+          <p style="margin:4px 0 12px;font-size:14px" id="kencheck-clear-text"></p>
+          <div class="quiz-actions" style="justify-content:center">
+            <button class="btn-mini primary" id="kencheck-retry">🔁 もう一度</button>
+            <button class="btn-mini" id="kencheck-clear-back">⬅ 地方をえらびなおす</button>
+          </div>
+        </div>
+      </div>
+
       <!-- 凡例（地方の色） -->
       <div class="panel" id="legend-panel">
         <h2>地方の色</h2>
@@ -3824,7 +3922,7 @@ header.title .sub {
 
       <!-- クイズモード -->
       <div class="panel hidden" id="quiz-panel">
-        <h2>🎯 クイズ</h2>
+        <h2>🎯 場所チェック</h2>
         <div id="quiz-stage-select">
           <p style="margin:4px 0 8px;font-size:13px">どの地方の クイズを する？</p>
           <div class="quiz-stage-list" id="stage-list"></div>
@@ -5097,7 +5195,7 @@ function setViewBoxForRegion(region) {
 
 // === 表示制御 ===
 function applyMode() {
-  app.classList.toggle("region-color", state.regionColor && state.mode !== "quiz" && state.mode !== "shape" && state.mode !== "locate" && state.mode !== "battle" && state.mode !== "sugoroku" && state.mode !== "puzzle" && state.mode !== "records" && state.mode !== "kanji" && state.mode !== "conquest" && state.mode !== "flash" && state.mode !== "memory" && state.mode !== "route");
+  app.classList.toggle("region-color", state.regionColor && state.mode !== "quiz" && state.mode !== "shape" && state.mode !== "locate" && state.mode !== "battle" && state.mode !== "sugoroku" && state.mode !== "puzzle" && state.mode !== "records" && state.mode !== "kanji" && state.mode !== "conquest" && state.mode !== "flash" && state.mode !== "memory" && state.mode !== "route" && state.mode !== "kencheck");
   app.classList.toggle("hide-labels", !state.showLabels);
   app.classList.toggle("quiz-mode", state.mode === "quiz");
   app.classList.toggle("point-mode", state.mode === "blank");
@@ -5110,6 +5208,7 @@ function applyMode() {
   app.classList.toggle("kanji-mode", state.mode === "kanji");
   app.classList.toggle("conquest-mode", state.mode === "conquest");
   app.classList.toggle("flash-mode", state.mode === "flash");
+  app.classList.toggle("kencheck-mode", state.mode === "kencheck");
   app.classList.toggle("memory-mode", state.mode === "memory");
   app.classList.toggle("route-mode", state.mode === "route");
 
@@ -5120,9 +5219,10 @@ function applyMode() {
 
   // 各パネルの表示
   document.getElementById("learn-panel").classList.toggle("hidden", state.mode !== "learn");
-  document.getElementById("legend-panel").classList.toggle("hidden", state.mode === "quiz" || state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash" || state.mode === "memory" || state.mode === "route");
+  document.getElementById("legend-panel").classList.toggle("hidden", state.mode === "quiz" || state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash" || state.mode === "memory" || state.mode === "route" || state.mode === "kencheck");
   document.getElementById("point-panel").classList.toggle("hidden", state.mode !== "blank");
   document.getElementById("flash-panel").classList.toggle("hidden", state.mode !== "flash");
+  document.getElementById("kencheck-panel").classList.toggle("hidden", state.mode !== "kencheck");
   document.getElementById("quiz-panel").classList.toggle("hidden", state.mode !== "quiz");
   document.getElementById("shape-panel").classList.toggle("hidden", state.mode !== "shape");
   document.getElementById("locate-panel").classList.toggle("hidden", state.mode !== "locate");
@@ -5142,13 +5242,13 @@ function applyMode() {
   document.getElementById("memory-wrap").classList.toggle("show", state.mode === "memory");
 
   // 県名トグルは指差しモード時/形当てモード時/場所当てクイズ時/対戦モード時/すごろく時/パズル時/記録時/漢字さがし時/県取り合戦時は非表示
-  document.getElementById("t-labels-wrap").classList.toggle("hidden", state.mode === "blank" || state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash" || state.mode === "memory" || state.mode === "route");
+  document.getElementById("t-labels-wrap").classList.toggle("hidden", state.mode === "blank" || state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash" || state.mode === "memory" || state.mode === "route" || state.mode === "kencheck");
 
   // 形当てクイズモード時は地図を隠して形クイズエリアを表示、それ以外は逆
   document.getElementById("map-wrap").classList.toggle("hidden", state.mode === "shape");
   document.getElementById("shape-wrap").classList.toggle("hidden", state.mode !== "shape");
   // 形当てクイズモード時/場所当てクイズ時/対戦モード時/すごろく時/パズル時/記録時/漢字さがし時/県取り合戦時はマップコントロール（県名トグル等）も隠す
-  document.getElementById("map-controls").classList.toggle("hidden", state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash" || state.mode === "memory" || state.mode === "route");
+  document.getElementById("map-controls").classList.toggle("hidden", state.mode === "shape" || state.mode === "locate" || state.mode === "battle" || state.mode === "sugoroku" || state.mode === "puzzle" || state.mode === "records" || state.mode === "kanji" || state.mode === "conquest" || state.mode === "flash" || state.mode === "memory" || state.mode === "route" || state.mode === "kencheck");
 
   // 地図上のクラスをクリア
   Object.values(prefElements).forEach(el => {
@@ -5236,6 +5336,14 @@ document.querySelectorAll(".mode-btn").forEach(btn => {
     } else if (flash.stage) {
       // 他モードに切り替えたらフラッシュカードを終了
       endFlash();
+    }
+    if (state.mode === "kencheck") {
+      // 都道府県チェックに入ったら地方選択画面を表示
+      endKencheck();
+      renderKencheckStageList();
+    } else if (kencheck.stage) {
+      // 他モードに切り替えたら都道府県チェックを終了
+      endKencheck();
     }
     if (state.mode === "shape") {
       // 形当てクイズモードに入ったらステージ選択画面を表示
@@ -5485,6 +5593,10 @@ function onPrefClick(p) {
   }
   if (state.mode === "flash") {
     // フラッシュカードは地図をタップしても反応しない
+    return;
+  }
+  if (state.mode === "kencheck") {
+    // 都道府県チェックは地図をタップしても反応しない
     return;
   }
   if (state.mode === "route") {
@@ -9093,7 +9205,7 @@ function renderRecords() {
     label: stg,
     value: quizCleared.includes(stg) ? "⭐ クリア済み" : null,
   }));
-  body.appendChild(buildSection("🎯 クイズモード（地方別クリア状況）", quizItems));
+  body.appendChild(buildSection("🎯 場所チェック（地方別クリア状況）", quizItems));
 
   // === ② 形当てクイズ ===
   const shapeBest = parseInt(localStorage.getItem("shapeChallengeBest") || "0");
@@ -9208,6 +9320,15 @@ function renderRecords() {
     value: flashPerfect.includes(st) ? "🌟" : null,
   }))));
 
+  // === 都道府県チェック ===
+  let kencheckPerfect = [];
+  try { kencheckPerfect = JSON.parse(localStorage.getItem("kencheckPerfectStages") || "[]"); } catch (e) {}
+  if (kencheckPerfect.length) anyRecord = true;
+  body.appendChild(buildSection("✏️ 都道府県チェック（1しゅうで パーフェクト）", QUIZ_STAGES.map(st => ({
+    label: st,
+    value: kencheckPerfect.includes(st) ? "🌟" : null,
+  }))));
+
   // === ⑧ しんけいすいじゃく ===
   const memBest = getMemoryBest();
   if (Object.keys(memBest).length) anyRecord = true;
@@ -9289,6 +9410,7 @@ document.getElementById("records-reset-btn").addEventListener("click", () => {
     "puzzleKikiBestWithBorder",
     "puzzleKikiBestNoBorder",
     "flashPerfectStages",
+    "kencheckPerfectStages",
     "quizStars",  // 念のため
   ];
   keys.forEach(k => localStorage.removeItem(k));
@@ -9301,6 +9423,7 @@ document.getElementById("records-reset-btn").addEventListener("click", () => {
   state.sugoroku.bestSoloTurns = null;
   state.kanji.bestTime = null;
   flash.perfect = [];
+  kencheck.perfect = [];
 
   alert("すべての記録を消去しました。");
   renderRecords();
@@ -9527,6 +9650,283 @@ document.getElementById("flash-clear-back").addEventListener("click", backToFlas
 document.getElementById("flash-retry").addEventListener("click", () => {
   const stage = flash.stage;
   if (stage) startFlash(stage);
+});
+
+// ==========================================================================
+// === ✏️ 都道府県チェック ===================================================
+// ==========================================================================
+const kencheck = {
+  stage: null,        // null=地方選択中, "北海道・東北"〜"九州","全国"
+  pool: [],           // この地方の県コード（全部）
+  round: [],          // 今の周で出す県コード
+  index: 0,           // 今の周の何枚目か
+  answered: false,    // 今の県を答えたか
+  checked: new Set(), // 正解した県コード
+  roundNum: 1,        // 何周目か
+  msgTimer: null,
+  autoTimer: null,    // 答えを見せてから次へ進むタイマー
+  perfect: (() => {   // 1周目で全部正解した地方（星をつける）
+    try { return JSON.parse(localStorage.getItem("kencheckPerfectStages") || "[]"); } catch (e) { return []; }
+  })(),
+};
+
+// 入力をそろえる（空白をとる・カタカナはひらがなに）
+function normalizeKencheckInput(str) {
+  return (str || "")
+    .replace(/[\s　]/g, "")
+    .replace(/[\u30a1-\u30f6]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0x60));
+}
+
+// 正解とみとめる答え（ひらがな・漢字、「県・都・府」はあってもなくてもよい）
+function getKencheckAnswers(p) {
+  const suffix = p.name.match(/[都府県]$/);
+  const kanaSuffix = suffix ? { "県": "けん", "都": "と", "府": "ふ" }[suffix[0]] : "";
+  const shortName = suffix ? p.name.slice(0, -1) : p.name;
+  const shortKana = kanaSuffix && p.kana.endsWith(kanaSuffix) ? p.kana.slice(0, -kanaSuffix.length) : p.kana;
+  return new Set([p.kana, shortKana, p.name, shortName, shortName + kanaSuffix, shortKana + (suffix ? suffix[0] : "")]);
+}
+
+function renderKencheckStageList() {
+  const list = document.getElementById("kencheck-stage-list");
+  list.innerHTML = "";
+  REGIONS.forEach(region => {
+    const btn = document.createElement("button");
+    btn.className = "stage-btn";
+    const count = PREFECTURES.filter(p => p.region === region).length;
+    if (kencheck.perfect.includes(region)) btn.classList.add("cleared");
+    btn.innerHTML = region + "<br><small>(" + count + ")</small>";
+    btn.addEventListener("click", () => startKencheck(region));
+    list.appendChild(btn);
+  });
+  const fullBtn = document.createElement("button");
+  fullBtn.className = "stage-btn full";
+  if (kencheck.perfect.includes("全国")) fullBtn.classList.add("cleared");
+  fullBtn.innerHTML = "🌏 全国（47県）";
+  fullBtn.addEventListener("click", () => startKencheck("全国"));
+  list.appendChild(fullBtn);
+
+  document.getElementById("kencheck-stage-select").classList.remove("hidden");
+  document.getElementById("kencheck-active").classList.add("hidden");
+  document.getElementById("kencheck-clear").classList.add("hidden");
+}
+
+function startKencheck(stage) {
+  kencheck.stage = stage;
+  const pool = stage === "全国" ? PREFECTURES.slice() : PREFECTURES.filter(p => p.region === stage);
+  kencheck.pool = pool.map(p => p.code);
+  kencheck.checked = new Set();
+  kencheck.roundNum = 1;
+  kencheck.round = shuffleFlash(kencheck.pool);
+  kencheck.index = 0;
+  kencheck.answered = false;
+
+  // 九州のときは沖縄を左上のミニマップに
+  if (prefElements[47]) {
+    if (stage === "九州") {
+      prefElements[47].setAttribute("transform", OKINAWA_KYUSHU_TRANSFORM);
+      showOkinawaFrame();
+    } else {
+      prefElements[47].setAttribute("transform", OKINAWA_ORIGINAL_TRANSFORM);
+      hideOkinawaFrame();
+    }
+  }
+
+  // 地方を拡大表示
+  setViewBoxForRegion(stage);
+
+  // 対象外の県を薄くする
+  Object.values(prefElements).forEach(el => el.classList.remove("dimmed", "flash-target"));
+  if (stage !== "全国") {
+    PREFECTURES.forEach(p => {
+      if (p.region !== stage) prefElements[p.code].classList.add("dimmed");
+    });
+  }
+
+  document.getElementById("kencheck-stage-select").classList.add("hidden");
+  document.getElementById("kencheck-clear").classList.add("hidden");
+  document.getElementById("kencheck-active").classList.remove("hidden");
+  document.getElementById("kencheck-stage-name").textContent =
+    stage === "全国" ? "🌏 全国（47県）" : stage + "地方（" + kencheck.pool.length + "県）";
+  showKencheckMsg("");
+
+  renderKencheckCard();
+}
+
+function renderKencheckCard() {
+  const code = kencheck.round[kencheck.index];
+  const p = prefByCode[code];
+  kencheck.answered = false;
+
+  // 地図で強調
+  Object.values(prefElements).forEach(el => el.classList.remove("flash-target"));
+  prefElements[code].classList.add("flash-target");
+
+  // カード
+  const card = document.getElementById("kencheck-card");
+  card.classList.remove("is-correct", "is-wrong");
+  document.getElementById("kencheck-hidden").classList.remove("hidden");
+  document.getElementById("kencheck-answer").classList.add("hidden");
+  document.getElementById("kencheck-name").textContent = p.name;
+  document.getElementById("kencheck-kana").textContent = p.kana;
+  document.getElementById("kencheck-yours").textContent = "";
+
+  // 入力
+  const input = document.getElementById("kencheck-input");
+  input.value = "";
+  input.disabled = false;
+  document.getElementById("kencheck-ok").disabled = false;
+  document.getElementById("kencheck-giveup").disabled = false;
+  document.getElementById("kencheck-next").disabled = true;
+  setTimeout(() => { if (kencheck.stage && !kencheck.answered) input.focus(); }, 50);
+
+  document.getElementById("kencheck-round").textContent =
+    kencheck.roundNum + "しゅう目　" + (kencheck.index + 1) + " / " + kencheck.round.length + "もん";
+
+  updateKencheckProgress();
+}
+
+function judgeKencheck(gaveUp) {
+  if (!kencheck.stage || kencheck.answered) return;
+  const input = document.getElementById("kencheck-input");
+  const raw = input.value;
+  const ans = normalizeKencheckInput(raw);
+  if (!gaveUp && ans === "") {
+    showKencheckMsg("ひらがなで 名前を 書いてね");
+    input.focus();
+    return;
+  }
+  const code = kencheck.round[kencheck.index];
+  const p = prefByCode[code];
+  const ok = !gaveUp && getKencheckAnswers(p).has(ans);
+  kencheck.answered = true;
+  if (ok) kencheck.checked.add(code);
+
+  // 答えを表示
+  const card = document.getElementById("kencheck-card");
+  card.classList.toggle("is-correct", ok);
+  card.classList.toggle("is-wrong", !ok);
+  document.getElementById("kencheck-hidden").classList.add("hidden");
+  document.getElementById("kencheck-answer").classList.remove("hidden");
+  const judge = document.getElementById("kencheck-judge");
+  judge.textContent = ok ? "⭕ 正解！" : (gaveUp ? "こたえは…" : "❌ ざんねん");
+  judge.className = "kencheck-judge " + (ok ? "ok" : "ng");
+  document.getElementById("kencheck-yours").textContent = (!ok && !gaveUp) ? "あなたの答え：" + raw.trim() : "";
+
+  input.disabled = true;
+  document.getElementById("kencheck-ok").disabled = true;
+  document.getElementById("kencheck-giveup").disabled = true;
+  const nextBtn = document.getElementById("kencheck-next");
+  nextBtn.disabled = false;
+  nextBtn.focus();
+
+  if (ok) playSound("correct");
+  else if (!gaveUp) playSound("wrong");
+  updateKencheckProgress();
+
+  // 2秒後に自動で次の問題へ
+  if (kencheck.autoTimer) clearTimeout(kencheck.autoTimer);
+  kencheck.autoTimer = setTimeout(() => {
+    kencheck.autoTimer = null;
+    goKencheckNext();
+  }, 2000);
+}
+
+function goKencheckNext() {
+  if (kencheck.autoTimer) { clearTimeout(kencheck.autoTimer); kencheck.autoTimer = null; }
+  if (!kencheck.stage || !kencheck.answered) return;
+  if (kencheck.index < kencheck.round.length - 1) {
+    kencheck.index++;
+    renderKencheckCard();
+  } else {
+    nextKencheckRound();
+  }
+}
+
+function updateKencheckProgress() {
+  const done = kencheck.checked.size;
+  const total = kencheck.pool.length;
+  document.getElementById("kencheck-done-count").textContent = done;
+  document.getElementById("kencheck-remain").textContent = total - done;
+  document.getElementById("kencheck-bar").style.width = (total ? done / total * 100 : 0) + "%";
+}
+
+function showKencheckMsg(text) {
+  const el = document.getElementById("kencheck-msg");
+  if (kencheck.msgTimer) clearTimeout(kencheck.msgTimer);
+  el.textContent = text;
+  el.style.opacity = text ? "1" : "0";
+  if (text) {
+    kencheck.msgTimer = setTimeout(() => { el.style.opacity = "0"; }, 2500);
+  }
+}
+
+// 1周が終わったら、まちがえた県だけで そのまま次の周へ
+function nextKencheckRound() {
+  const rest = kencheck.round.filter(c => !kencheck.checked.has(c));
+  if (rest.length === 0) {
+    clearKencheck();
+    return;
+  }
+  kencheck.roundNum++;
+  kencheck.round = shuffleFlash(rest);
+  kencheck.index = 0;
+  showKencheckMsg("のこり " + rest.length + "もん。もう一度 出てくるよ！");
+  renderKencheckCard();
+}
+
+function clearKencheck() {
+  Object.values(prefElements).forEach(el => el.classList.remove("flash-target"));
+  document.getElementById("kencheck-active").classList.add("hidden");
+  document.getElementById("kencheck-clear").classList.remove("hidden");
+  const name = kencheck.stage === "全国" ? "全国" : kencheck.stage + "地方";
+  document.getElementById("kencheck-clear-text").textContent =
+    name + "の " + kencheck.pool.length + "県を、" + kencheck.roundNum + "しゅうで ぜんぶ 書けました！";
+  // 1周目で全部正解したら星をつける
+  if (kencheck.roundNum === 1) {
+    document.getElementById("kencheck-clear-text").textContent += "　🌟 1しゅうで パーフェクト！ ほしが ついたよ！";
+    if (!kencheck.perfect.includes(kencheck.stage)) {
+      kencheck.perfect.push(kencheck.stage);
+      try { localStorage.setItem("kencheckPerfectStages", JSON.stringify(kencheck.perfect)); } catch (e) {}
+    }
+  }
+  playSound("correct");
+  showConfetti();
+}
+
+function endKencheck() {
+  kencheck.stage = null;
+  kencheck.round = [];
+  kencheck.checked = new Set();
+  kencheck.answered = false;
+  if (kencheck.msgTimer) clearTimeout(kencheck.msgTimer);
+  if (kencheck.autoTimer) { clearTimeout(kencheck.autoTimer); kencheck.autoTimer = null; }
+  Object.values(prefElements).forEach(el => el.classList.remove("dimmed", "flash-target"));
+  if (prefElements[47]) {
+    prefElements[47].setAttribute("transform", OKINAWA_ORIGINAL_TRANSFORM);
+  }
+  hideOkinawaFrame();
+}
+
+document.getElementById("kencheck-ok").addEventListener("click", () => judgeKencheck(false));
+document.getElementById("kencheck-giveup").addEventListener("click", () => judgeKencheck(true));
+document.getElementById("kencheck-next").addEventListener("click", goKencheckNext);
+document.getElementById("kencheck-input").addEventListener("keydown", (e) => {
+  // 変換中のEnterは無視する
+  if (e.key === "Enter" && !e.isComposing && e.keyCode !== 229) {
+    e.preventDefault();
+    judgeKencheck(false);
+  }
+});
+function backToKencheckSelect() {
+  endKencheck();
+  renderKencheckStageList();
+  setViewBox(REGION_VIEWBOXES["全国"]);
+}
+document.getElementById("kencheck-back").addEventListener("click", backToKencheckSelect);
+document.getElementById("kencheck-clear-back").addEventListener("click", backToKencheckSelect);
+document.getElementById("kencheck-retry").addEventListener("click", () => {
+  const stage = kencheck.stage;
+  if (stage) startKencheck(stage);
 });
 
 // === 大タブ（覚える・発展問題・ゲーム・記録）の切替 ===
